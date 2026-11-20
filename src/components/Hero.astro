@@ -1,0 +1,294 @@
+---
+import { getLang, useUI } from "../i18n";
+
+const t = useUI(getLang(Astro.url)).hero;
+const { before, wrong, after } = t.note;
+---
+
+<section class="hero">
+  <div class="hero__content" data-fit={t.fit || undefined}>
+    <h1 class="hero__title">
+      {
+        t.title.map((line, i) => (
+          <>
+            {i > 0 && <br />}
+            {line}
+          </>
+        ))
+      }
+    </h1>
+    <!--
+      Sem JS (ou com movimento reduzido) vale o texto final do .note__sizer.
+      Com JS, o .note__typed é "digitado" depois da entrada do título; o sizer
+      invisível reserva a largura final para o texto não pular (alinhado à direita).
+    -->
+    <p class="hero__note" data-note data-before={before} data-wrong={wrong} data-after={after}>
+      <span class="note__wrap">
+        <span class="note__sizer">{`/*${before}${after} */`}</span>
+        <span class="note__typed" aria-hidden="true"><span data-note-open></span><span class="note__body" data-note-body></span><span data-note-close></span></span>
+      </span>
+    </p>
+  </div>
+</section>
+
+<script>
+  // Entrada por linha: o título é quebrado em linhas conforme a largura real
+  // (depende da fonte e do viewport) e cada linha sobe com fade em sequência.
+  const title = document.querySelector<HTMLElement>(".hero__title");
+  const note = document.querySelector<HTMLElement>(".hero__note");
+  const content = document.querySelector<HTMLElement>(".hero__content");
+
+  if (title && note && content) {
+    const original = title.innerHTML;
+    const START_DELAY = 0.4; // s, antes da primeira linha
+    const STAGGER = 0.08; // s, entre linhas
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+    function split(animate: boolean) {
+      // Volta à largura do CSS para as linhas quebrarem como no layout original
+      content!.style.width = "";
+      title!.innerHTML = original;
+
+      // 1) cada palavra vira um <span> (o <br> do texto é preservado)
+      const words: HTMLElement[] = [];
+      const nodes: Node[] = [];
+      title!.childNodes.forEach((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          (node.textContent ?? "")
+            .split(/\s+/)
+            .filter(Boolean)
+            .forEach((text) => {
+              const span = document.createElement("span");
+              span.textContent = text;
+              words.push(span);
+              nodes.push(span, document.createTextNode(" "));
+            });
+        } else {
+          nodes.push(node.cloneNode());
+        }
+      });
+      title!.replaceChildren(...nodes);
+
+      // 2) agrupa as palavras por posição vertical = linhas renderizadas
+      const lines: string[][] = [];
+      let lastTop: number | null = null;
+      words.forEach((word) => {
+        const top = Math.round(word.offsetTop);
+        if (top !== lastTop) lines.push([]);
+        lines[lines.length - 1].push(word.textContent ?? "");
+        lastTop = top;
+      });
+
+      // 3) reconstrói o título em linhas e liga a animação
+      title!.replaceChildren(
+        ...lines.map((text, i) => {
+          const line = document.createElement("span");
+          line.className = "hero__line";
+          line.textContent = text.join(" ");
+          if (animate) {
+            line.dataset.reveal = "";
+            line.style.setProperty("--reveal-delay", `${START_DELAY + i * STAGGER}s`);
+          }
+          return line;
+        }),
+      );
+
+      // data-fit: o bloco encolhe até a maior linha (sem requebrar), para a nota
+      // alinhada à direita não ficar longe do título. O +1 evita requebra por arredondamento.
+      if (content!.dataset.fit !== undefined) {
+        const range = document.createRange();
+        const widest = Math.max(
+          ...Array.from(title!.children).map((line) => {
+            range.selectNodeContents(line);
+            return range.getBoundingClientRect().width;
+          }),
+        );
+        content!.style.width = `${Math.ceil(widest) + 1}px`;
+      }
+
+      // A nota sobe com o título, como a "linha" seguinte (a digitação acontece dentro dela)
+      if (animate) {
+        note!.dataset.reveal = "";
+        note!.style.setProperty("--reveal-delay", `${START_DELAY + lines.length * STAGGER}s`);
+      }
+      title!.dataset.split = "";
+      return title!.lastElementChild as HTMLElement;
+    }
+
+    // ── Nota "/* I do both. */" digitada como num editor (VS Code) ──
+    // "/*" fica terciário; o texto interno fica preto enquanto o comentário
+    // não é fechado; ao digitar "*/" tudo vira terciário. Inclui um erro de
+    // digitação ("boht") que é percebido, apagado e corrigido.
+    const open = note.querySelector<HTMLElement>("[data-note-open]")!;
+    const body = note.querySelector<HTMLElement>("[data-note-body]")!;
+    const close = note.querySelector<HTMLElement>("[data-note-close]")!;
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const keystroke = () => sleep(35 + Math.random() * 30);
+    let noteStarted = false;
+
+    async function typeInto(el: HTMLElement, text: string) {
+      for (const char of text) {
+        el.textContent += char;
+        await keystroke();
+      }
+    }
+
+    async function backspace(el: HTMLElement, count: number) {
+      for (let i = 0; i < count; i++) {
+        el.textContent = el.textContent!.slice(0, -1);
+        await sleep(35);
+      }
+    }
+
+    async function typeNote() {
+      if (noteStarted) return;
+      noteStarted = true;
+      await sleep(100);
+      await typeInto(open, "/*");
+      await sleep(120);
+      // Texto por idioma (data-before/wrong/after): "…bo" + "ht" → apaga → "th."
+      const { before, wrong, after } = note!.dataset;
+      await typeInto(body, before ?? "");
+      await typeInto(body, wrong ?? ""); // erro de digitação
+      await sleep(220); // percebe o erro
+      await backspace(body, (wrong ?? "").length);
+      await sleep(80);
+      await typeInto(body, after ?? "");
+      await sleep(120);
+      await typeInto(close, " *");
+      // a última "/" fecha o comentário: a cor muda no mesmo instante
+      close.textContent += "/";
+      note.classList.add("is-closed");
+    }
+
+    function showFinal() {
+      noteStarted = true;
+      note.dataset.static = "";
+    }
+
+    // Espera a fonte para medir as linhas com a largura correta
+    // Vindo de uma transição de página (PageTransition.astro), a entrada só começa
+    // quando as barras começam a abrir: o evento "pt:reveal" marca esse instante.
+    const revealStarted = () =>
+      document.documentElement.hasAttribute("data-pt-wait")
+        ? new Promise<void>((resolve) => addEventListener("pt:reveal", () => resolve(), { once: true }))
+        : Promise.resolve();
+
+    document.fonts.ready.then(async () => {
+      const animate = !reduceMotion.matches;
+      split(animate);
+
+      // A digitação começa com o título ainda em movimento (a curva já está
+      // quase no fim): 0,7s depois que a última linha começa a subir.
+      if (animate) {
+        await revealStarted();
+        const lastLineDelay = START_DELAY + (title.children.length - 1) * STAGGER;
+        setTimeout(typeNote, (lastLineDelay + 0.7) * 1000);
+      } else showFinal();
+
+      // Ao redimensionar, refaz as linhas sem repetir a animação
+      let width = innerWidth;
+      addEventListener("resize", () => {
+        if (innerWidth === width) return;
+        width = innerWidth;
+        delete note.dataset.reveal;
+        split(false);
+        if (!noteStarted) typeNote(); // a animação das linhas foi cortada
+      });
+    });
+  }
+</script>
+
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 450px;
+    padding: var(--space-inset-xl);
+  }
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-stack-xs);
+    width: min(100%, 425px);
+  }
+
+  /* Home / Phone: hero ocupa o espaço entre header e projeto (~414px) e o texto tem 324px */
+  @media (max-width: 767.98px) {
+    .hero {
+      height: auto;
+      min-height: 414px;
+    }
+
+    .hero__content {
+      width: min(100%, 324px);
+    }
+  }
+
+  .hero__title {
+    width: 100%;
+    font-family: var(--typo-heading-lg-family);
+    font-size: var(--typo-heading-lg-size);
+    font-weight: var(--typo-heading-lg-weight);
+    line-height: var(--typo-heading-lg-line-height);
+    letter-spacing: var(--typo-heading-lg-letter-spacing);
+    color: var(--content-primary);
+    overflow-wrap: break-word;
+  }
+
+  .hero__title :global(.hero__line) {
+    display: block;
+  }
+
+  /* Com JS, o título fica oculto até as linhas serem calculadas */
+  :global(.js) .hero__title:not([data-split]) {
+    opacity: 0;
+  }
+
+  .note__wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Texto final: ocupa o espaço, mas fica invisível enquanto a nota é digitada */
+  :global(.js) .note__sizer {
+    opacity: 0;
+  }
+
+  .hero__note[data-static] .note__sizer {
+    opacity: 1;
+  }
+
+  .hero__note[data-static] .note__typed {
+    display: none;
+  }
+
+  .note__typed {
+    position: absolute;
+    inset: 0;
+    white-space: pre;
+    text-align: left;
+  }
+
+  .note__body {
+    color: var(--content-primary);
+  }
+
+  .is-closed .note__body {
+    color: var(--content-tertiary);
+  }
+
+  .hero__note {
+    width: 100%;
+    /* No Figma este texto (18 / medium / 160%) usa primitivos, sem estilo typo */
+    font-size: var(--font-size-18);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--font-line-height-160);
+    letter-spacing: var(--font-letter-spacing-neg-6);
+    text-align: right;
+    color: var(--content-tertiary);
+  }
+</style>

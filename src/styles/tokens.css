@@ -1,0 +1,265 @@
+/*
+ * Design tokens — espelho das variáveis do Figma.
+ * Os nomes seguem o "codeSyntax > Web" definido no Figma.
+ * Ao criar ou alterar um token, mantenha Figma e este arquivo iguais.
+ */
+
+:root {
+  /* ── Primitivos: cor ─────────────────────────────── */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5dc;
+  --color-gray-400: #99a1af;
+  --color-gray-500: #6a7282;
+  --color-gray-600: #4a5565;
+  --color-gray-700: #364153;
+  --color-gray-800: #1e2939;
+  --color-gray-900: #101828;
+  --color-gray-950: #030712;
+
+  --color-teal-50: #f0fdfa;
+  --color-teal-100: #cbfbf1;
+  --color-teal-200: #96f7e4;
+  --color-teal-300: #46ecd5;
+  --color-teal-400: #00d5be;
+  --color-teal-500: #00bba7;
+  --color-teal-600: #009689;
+  --color-teal-700: #00786f;
+  --color-teal-800: #005f5a;
+  --color-teal-900: #0b4f4a;
+  --color-teal-950: #022f2e;
+
+  /* ── Semânticos: neutral → gray ──────────────────── */
+  --color-neutral-50: var(--color-gray-50);
+  --color-neutral-100: var(--color-gray-100);
+  --color-neutral-200: var(--color-gray-200);
+  --color-neutral-300: var(--color-gray-300);
+  --color-neutral-400: var(--color-gray-400);
+  --color-neutral-500: var(--color-gray-500);
+  --color-neutral-600: var(--color-gray-600);
+  --color-neutral-700: var(--color-gray-700);
+  --color-neutral-800: var(--color-gray-800);
+  --color-neutral-900: var(--color-gray-900);
+  --color-neutral-950: var(--color-gray-950);
+
+  /* ── Semânticos: brand → teal ────────────────────── */
+  --color-brand-50: var(--color-teal-50);
+  --color-brand-100: var(--color-teal-100);
+  --color-brand-200: var(--color-teal-200);
+  --color-brand-300: var(--color-teal-300);
+  --color-brand-400: var(--color-teal-400);
+  --color-brand-500: var(--color-teal-500);
+  --color-brand-600: var(--color-teal-600);
+  --color-brand-700: var(--color-teal-700);
+  --color-brand-800: var(--color-teal-800);
+  --color-brand-900: var(--color-teal-900);
+  --color-brand-950: var(--color-teal-950);
+
+  /* ── Tipografia ──────────────────────────────────── */
+  /* "Work Sans Variable" é o nome registrado pelo @fontsource-variable/work-sans */
+  --font-family-work-sans: "Work Sans Variable", "Work Sans", system-ui, sans-serif;
+  --font-family-switzer: "Switzer", system-ui, sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --font-size-18: 18px;
+  --font-size-20: 20px;
+  --font-size-24: 24px;
+  --font-size-28: 28px;
+  --font-size-36: 36px;
+
+  /* Figma guarda em %, aqui convertido para valor unitless */
+  --font-line-height-100: 1;
+  --font-line-height-110: 1.1;
+  --font-line-height-150: 1.5;
+  --font-line-height-160: 1.6;
+
+  /* Figma guarda em %, aqui convertido para em */
+  --font-letter-spacing-neg-6: -0.06em;
+  --font-letter-spacing-neg-4: -0.04em;
+  --font-letter-spacing-neg-3: -0.03em;
+  --font-letter-spacing-neg-1: -0.01em;
+  --font-letter-spacing-pos-4: 0.04em;
+
+  /* ── Espaçamento ─────────────────────────────────── */
+  --spacing-0: 0;
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-56: 56px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+
+  /* ── Raio ────────────────────────────────────────── */
+  --radius-0: 0;
+  --radius-4: 4px; /* NOVO: ainda não existe no Figma */
+  --radius-12: 12px;
+
+  /* ════════════════════════════════════════════════════
+   * Tokens semânticos — espelham as coleções do Figma
+   * (color, layout, typo). "/" do Figma vira "-".
+   * Typo: valores do modo Desktop; o modo Mobile é aplicado
+   * pelo @media no final deste arquivo.
+   * ════════════════════════════════════════════════════ */
+
+  /* ── color ──────────────────────────────────────── */
+  --content-primary: var(--color-neutral-900);
+  --content-secondary: var(--color-neutral-600);
+  --content-tertiary: var(--color-neutral-500);
+  --content-accent-primary: var(--color-brand-900);
+  --content-accent-secondary: var(--color-brand-700);
+
+  --surface-default: var(--color-neutral-50);
+  --surface-strong: var(--color-neutral-50);
+  --surface-emphasis: var(--color-neutral-100);
+  --surface-inverse: var(--color-neutral-950);
+  --surface-accent-soft: var(--color-brand-50);
+  --surface-accent-default: var(--color-brand-400);
+
+  --border-default: var(--color-neutral-200);
+  --border-soft: var(--color-neutral-100);
+  --border-inverse: var(--color-neutral-900);
+  --border-accent-soft: var(--color-teal-100);
+  --border-accent-default: var(--color-teal-400);
+  --border-accent-strong: var(--color-teal-700);
+
+  /* ── layout: space/stack ────────────────────────── */
+  --space-stack-2xs: var(--spacing-4);
+  --space-stack-xs: var(--spacing-8);
+  --space-stack-sm: var(--spacing-12);
+  --space-stack-md: var(--spacing-16);
+  --space-stack-lg: var(--spacing-20);
+  --space-stack-xl: var(--spacing-24);
+  --space-stack-2xl: var(--spacing-32);
+  --space-stack-3xl: var(--spacing-40);
+  --space-stack-5xl: var(--spacing-64);
+
+  /* ── layout: space/inset ────────────────────────── */
+  --space-inset-2xs: var(--spacing-4);
+  --space-inset-sm: var(--spacing-12);
+  --space-inset-md: var(--spacing-16);
+  --space-inset-lg: var(--spacing-20);
+  --space-inset-xl: var(--spacing-24);
+  --space-inset-3xl: var(--spacing-40);
+  --space-inset-5xl: var(--spacing-64);
+  --space-inset-6xl: var(--spacing-80);
+
+  /* ── layout: space/inline ───────────────────────── */
+  --space-inline-2xs: var(--spacing-4);
+  --space-inline-xs: var(--spacing-8);
+  --space-inline-sm: var(--spacing-12);
+  --space-inline-md: var(--spacing-16);
+  --space-inline-xl: var(--spacing-24);
+  --space-inline-2xl: var(--spacing-32);
+  --space-inline-4xl: var(--spacing-56);
+
+  /* ── layout: space/gap ──────────────────────────── */
+  --space-gap-xs: var(--spacing-8);
+  --space-gap-md: var(--spacing-16);
+  --space-gap-xl: var(--spacing-24);
+  --space-gap-2xl: var(--spacing-32);
+
+  /* ── layout: radius ─────────────────────────────── */
+  --radius-none: var(--radius-0);
+  --radius-sm: var(--radius-4); /* NOVO: ainda não existe no Figma */
+  --radius-md: var(--radius-12);
+
+  /* ── typo: heading ──────────────────────────────── */
+  --typo-heading-lg-family: var(--font-family-work-sans);
+  --typo-heading-lg-size: var(--font-size-36);
+  --typo-heading-lg-weight: var(--font-weight-medium);
+  --typo-heading-lg-line-height: var(--font-line-height-110);
+  --typo-heading-lg-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  --typo-heading-md-family: var(--font-family-work-sans);
+  --typo-heading-md-size: var(--font-size-28);
+  --typo-heading-md-weight: var(--font-weight-medium);
+  --typo-heading-md-line-height: var(--font-line-height-110);
+  --typo-heading-md-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  --typo-heading-sm-family: var(--font-family-work-sans);
+  --typo-heading-sm-size: var(--font-size-20);
+  --typo-heading-sm-weight: var(--font-weight-medium);
+  --typo-heading-sm-line-height: var(--font-line-height-110);
+  --typo-heading-sm-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  /* ── typo: body ─────────────────────────────────── */
+  --typo-body-lg-regular-family: var(--font-family-work-sans);
+  --typo-body-lg-regular-size: var(--font-size-18);
+  --typo-body-lg-regular-weight: var(--font-weight-regular);
+  --typo-body-lg-regular-line-height: var(--font-line-height-150);
+  --typo-body-lg-regular-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  --typo-body-lg-semibold-family: var(--font-family-work-sans);
+  --typo-body-lg-semibold-size: var(--font-size-18);
+  --typo-body-lg-semibold-weight: var(--font-weight-semibold);
+  --typo-body-lg-semibold-line-height: var(--font-line-height-150);
+  --typo-body-lg-semibold-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  --typo-body-md-regular-family: var(--font-family-work-sans);
+  --typo-body-md-regular-size: var(--font-size-16);
+  --typo-body-md-regular-weight: var(--font-weight-regular);
+  --typo-body-md-regular-line-height: var(--font-line-height-150);
+  --typo-body-md-regular-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  --typo-body-md-semibold-family: var(--font-family-work-sans);
+  --typo-body-md-semibold-size: var(--font-size-16);
+  --typo-body-md-semibold-weight: var(--font-weight-semibold);
+  --typo-body-md-semibold-line-height: var(--font-line-height-150);
+  --typo-body-md-semibold-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  --typo-body-sm-regular-family: var(--font-family-work-sans);
+  --typo-body-sm-regular-size: var(--font-size-14);
+  --typo-body-sm-regular-weight: var(--font-weight-regular);
+  --typo-body-sm-regular-line-height: var(--font-line-height-150);
+  --typo-body-sm-regular-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  --typo-body-sm-semibold-family: var(--font-family-work-sans);
+  --typo-body-sm-semibold-size: var(--font-size-14);
+  --typo-body-sm-semibold-weight: var(--font-weight-semibold);
+  --typo-body-sm-semibold-line-height: var(--font-line-height-150);
+  --typo-body-sm-semibold-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  /* ── typo: caption e label ──────────────────────── */
+  --typo-caption-family: var(--font-family-work-sans);
+  --typo-caption-size: var(--font-size-14);
+  --typo-caption-weight: var(--font-weight-regular);
+  --typo-caption-line-height: var(--font-line-height-150);
+  --typo-caption-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  --typo-label-md-family: var(--font-family-work-sans);
+  --typo-label-md-size: var(--font-size-16);
+  --typo-label-md-weight: var(--font-weight-medium);
+  --typo-label-md-line-height: var(--font-line-height-100);
+  --typo-label-md-letter-spacing: var(--font-letter-spacing-neg-6);
+
+  --typo-label-lg-family: var(--font-family-work-sans);
+  --typo-label-lg-size: var(--font-size-28);
+  --typo-label-lg-weight: var(--font-weight-medium);
+  --typo-label-lg-line-height: var(--font-line-height-100);
+  --typo-label-lg-letter-spacing: var(--font-letter-spacing-neg-6);
+}
+
+/*
+ * typo — modo Mobile do Figma. Só os tamanhos mudam entre os modos
+ * (família, peso, entrelinha e tracking são iguais). O breakpoint
+ * acompanha o do Header (768px).
+ */
+@media (max-width: 767.98px) {
+  :root {
+    --typo-heading-lg-size: var(--font-size-28);
+    --typo-heading-md-size: var(--font-size-24);
+    --typo-heading-sm-size: var(--font-size-18);
+    --typo-label-lg-size: var(--font-size-18);
+  }
+}

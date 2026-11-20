@@ -1,0 +1,26 @@
+---
+import { getLang, useUI } from "../i18n";
+
+const year = 2026;
+const [rights] = useUI(getLang(Astro.url)).footer;
+---
+
+<footer class="footer">
+  <p>© {year} Caio Marinho.</p>
+  <p>{rights}</p>
+</footer>
+
+<style>
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-inset-xl);
+    font-family: var(--typo-caption-family);
+    font-size: var(--typo-caption-size);
+    font-weight: var(--typo-caption-weight);
+    line-height: var(--typo-caption-line-height);
+    letter-spacing: var(--typo-caption-letter-spacing);
+    color: var(--content-tertiary);
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+// Ficha do projeto (Role / Timeline / Type). Cada valor aceita várias linhas.
+interface Props {
+  items: { label: string; lines: string[] }[];
+}
+
+const { items } = Astro.props;
+---
+
+<dl class="meta">
+  {
+    items.map((item) => (
+      <div class="meta__item">
+        <dt class="case-label">{item.label}</dt>
+        <dd>
+          {item.lines.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))}
+        </dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .meta {
+    display: flex;
+    gap: var(--space-inline-md);
+    margin: 0;
+  }
+
+  .meta__item {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    min-width: 0;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--content-primary);
+    font-size: var(--typo-body-md-regular-size);
+    font-weight: var(--typo-body-md-regular-weight);
+    line-height: var(--typo-body-md-regular-line-height);
+    letter-spacing: var(--typo-body-md-regular-letter-spacing);
+  }
+</style>

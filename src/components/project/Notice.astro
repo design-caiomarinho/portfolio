@@ -1,0 +1,88 @@
+---
+// Aviso de leitura com atalhos para as seções principais.
+interface Props {
+  text: string;
+  hint: string;
+  links: { label: string; href: string }[];
+}
+
+const { text, hint, links } = Astro.props;
+---
+
+<aside class="notice">
+  <p class="notice__text">{text}</p>
+  <div class="notice__shortcuts">
+    <p class="notice__hint">{hint}</p>
+    <nav class="notice__links" aria-label={hint}>
+      {links.map((link) => <a class="notice__link" href={link.href}>{link.label}</a>)}
+    </nav>
+  </div>
+</aside>
+
+<style>
+  .notice {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xl);
+    padding: var(--space-inset-lg);
+    background: var(--surface-accent-soft);
+    border: 1px solid var(--border-accent-soft);
+    border-radius: var(--radius-md);
+  }
+
+  .notice__text {
+    color: var(--content-accent-primary);
+  }
+
+  .notice__shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-gap-md);
+  }
+
+  .notice__hint {
+    color: var(--content-accent-secondary);
+  }
+
+  .notice__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-stack-xs) var(--space-stack-xs);
+  }
+
+  /* Mesma linha que entra da esquerda do navbar */
+  .notice__link {
+    position: relative;
+    color: var(--content-accent-secondary);
+    font-size: var(--typo-label-md-size);
+    font-weight: var(--typo-label-md-weight);
+    line-height: var(--typo-label-md-line-height);
+    letter-spacing: var(--typo-label-md-letter-spacing);
+    text-decoration: none;
+  }
+
+  .notice__link::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -2px;
+    left: 0;
+    height: 1px;
+    background: var(--border-accent-strong);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+
+  .notice__link:hover::after,
+  .notice__link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .notice__link::after {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,148 @@
+/*
+ * Tipografia e blocos de texto das páginas de case.
+ * Global (e não scoped) porque o conteúdo chega por <slot> e não recebe
+ * o atributo de escopo dos componentes. :where() mantém a especificidade
+ * em zero, então qualquer componente consegue sobrescrever.
+ */
+
+:where(.case) h1 {
+  color: var(--content-primary);
+  font-family: var(--typo-heading-lg-family);
+  font-size: var(--typo-heading-lg-size);
+  font-weight: var(--typo-heading-lg-weight);
+  line-height: var(--typo-heading-lg-line-height);
+  letter-spacing: var(--typo-heading-lg-letter-spacing);
+}
+
+:where(.case) h2 {
+  margin: 0;
+  color: var(--content-primary);
+  font-family: var(--typo-heading-md-family);
+  font-size: var(--typo-heading-md-size);
+  font-weight: var(--typo-heading-md-weight);
+  line-height: var(--typo-heading-md-line-height);
+  letter-spacing: var(--typo-heading-md-letter-spacing);
+}
+
+:where(.case) h3 {
+  margin: 0;
+  color: var(--content-primary);
+  font-family: var(--typo-heading-sm-family);
+  font-size: var(--typo-heading-sm-size);
+  font-weight: var(--typo-heading-sm-weight);
+  line-height: var(--typo-heading-sm-line-height);
+  letter-spacing: var(--typo-heading-sm-letter-spacing);
+}
+
+:where(.case) p,
+:where(.case) li {
+  color: var(--content-secondary);
+  font-family: var(--typo-body-md-regular-family);
+  font-size: var(--typo-body-md-regular-size);
+  font-weight: var(--typo-body-md-regular-weight);
+  line-height: var(--typo-body-md-regular-line-height);
+  letter-spacing: var(--typo-body-md-regular-letter-spacing);
+}
+
+:where(.case) ol {
+  margin: 0;
+  padding-left: var(--spacing-24);
+}
+
+/* Pilha de texto: título + parágrafos, 16px entre eles */
+.case-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-stack-md);
+}
+
+/* Agrupamentos de ritmo vertical dentro de uma seção */
+.case-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-stack-2xl);
+}
+
+.case-tight {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-stack-sm);
+}
+
+.case-figures {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-stack-md);
+}
+
+/* Duas (ou mais) telas lado a lado, ex.: mobile */
+.case-figure-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-inline-md);
+  align-items: start;
+}
+
+/* Cards em linha; recolhe sozinho conforme a largura e a quantidade */
+.case-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-inline-md);
+}
+
+/* Rótulo pequeno (semibold, terciário) */
+.case-label {
+  color: var(--content-tertiary);
+  font-family: var(--typo-body-sm-semibold-family);
+  font-size: var(--typo-body-sm-semibold-size);
+  font-weight: var(--typo-body-sm-semibold-weight);
+  line-height: var(--typo-body-sm-semibold-line-height);
+  letter-spacing: var(--typo-body-sm-semibold-letter-spacing);
+}
+
+.case-caption {
+  color: var(--content-tertiary);
+  font-family: var(--typo-body-sm-regular-family);
+  font-size: var(--typo-body-sm-regular-size);
+  font-weight: var(--typo-body-sm-regular-weight);
+  line-height: var(--typo-body-sm-regular-line-height);
+  letter-spacing: var(--typo-body-sm-regular-letter-spacing);
+}
+
+/* Nota com filete embaixo (ex.: "What comes next") */
+.case-note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-stack-md);
+  padding-bottom: var(--space-inset-lg);
+  border-bottom: 1px solid var(--border-default);
+}
+
+/* Destaque com filete à esquerda */
+.case-quote {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-stack-md);
+  margin: 0;
+  padding-left: var(--space-inset-lg);
+  border-left: 2px solid var(--border-accent-default);
+}
+
+.case-quote__text {
+  color: var(--content-primary);
+  font-family: var(--typo-heading-md-family);
+  font-size: var(--typo-heading-md-size);
+  font-weight: var(--typo-heading-md-weight);
+  line-height: var(--typo-heading-md-line-height);
+  letter-spacing: var(--typo-heading-md-letter-spacing);
+}
+
+/*
+ * Português: h2/h3, parágrafos etc. já são tratados em global.css. Aqui entra
+ * o que é específico do case: o h1 (no hero da home ele é medido por script, por
+ * isso o global não o inclui), as citações e os textos curtos dos cards, onde
+ * equilibrar vale mais do que só evitar a palavra órfã.
+ */
+html[lang="pt-BR"] :is(.case h1, .case-quote__text, .card__text) {
+  text-wrap: balance;
+}

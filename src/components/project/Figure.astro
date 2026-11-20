@@ -1,0 +1,93 @@
+---
+// Imagem do case com legenda opcional. Passe width/height reais para o
+// navegador reservar o espaço (sem salto de layout).
+// Com `video` (um .webm), o quadro vira um vídeo em loop, mudo e sem controles
+// (como um GIF), e `src` passa a ser o poster. Ele só toca enquanto está visível.
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  caption?: string;
+  video?: string;
+  border?: "soft" | "default" | "none";
+  eager?: boolean;
+}
+
+// Padrão do case: raio de 12px e borda soft. "default"/"none" só como exceção.
+const { src, alt, width, height, caption, video, border = "soft", eager = false } = Astro.props;
+const mediaClass = ["figure__img", border !== "none" && `figure__img--${border}`];
+---
+
+<figure class="figure">
+  {
+    video ? (
+      <video
+        class:list={mediaClass}
+        data-loop-video
+        poster={src}
+        width={width}
+        height={height}
+        aria-label={alt}
+        role="img"
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source src={video} type="video/webm" />
+      </video>
+    ) : (
+      <img
+        class:list={mediaClass}
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+      />
+    )
+  }
+  {caption && <figcaption class="case-caption">{caption}</figcaption>}
+</figure>
+
+<script>
+  // Toca só enquanto visível; com "reduzir movimento" fica parado no poster.
+  const videos = document.querySelectorAll<HTMLVideoElement>("video[data-loop-video]");
+  if (videos.length && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const el = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) el.play().catch(() => {});
+        else el.pause();
+      }
+    });
+    videos.forEach((el) => observer.observe(el));
+  }
+</script>
+
+<style>
+  .figure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    margin: 0;
+  }
+
+  .figure__img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .figure__img--soft,
+  .figure__img--default {
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+  }
+
+  .figure__img--soft {
+    border-color: var(--border-soft);
+  }
+</style>

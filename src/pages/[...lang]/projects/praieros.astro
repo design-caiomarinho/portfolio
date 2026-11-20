@@ -1,0 +1,272 @@
+---
+import Project from "../../../layouts/Project.astro";
+import Section from "../../../components/project/Section.astro";
+import Figure from "../../../components/project/Figure.astro";
+import Meta from "../../../components/project/Meta.astro";
+import Notice from "../../../components/project/Notice.astro";
+import Card from "../../../components/project/Card.astro";
+import Step from "../../../components/project/Step.astro";
+import OutcomeTable from "../../../components/project/OutcomeTable.astro";
+import LinkOut from "../../../components/project/LinkOut.astro";
+import { getLang, langPaths } from "../../../i18n";
+import { praieros } from "../../../i18n/praieros";
+
+// Gera /projects/praieros (en) e /pt/projects/praieros (pt) a partir deste arquivo
+export const getStaticPaths = langPaths;
+
+// Todo o texto vem de src/i18n/praieros.ts
+const c = praieros[getLang(Astro.url)];
+
+const img = "/projects/praieros";
+
+// TODO: trocar pelos links reais do app
+const liveUrl = "#";
+
+// Os ids são âncoras fixas; só o rótulo muda com o idioma
+const sections = [
+  { id: "overview", label: c.sections.overview },
+  { id: "context", label: c.sections.context },
+  { id: "problem", label: c.sections.problem },
+  { id: "solution", label: c.sections.solution },
+  { id: "ui-highlights", label: c.sections.uiHighlights },
+  { id: "process", label: c.sections.process },
+  { id: "outcome", label: c.sections.outcome },
+];
+
+const label = (id: string) => sections.find((s) => s.id === id)!.label;
+const [noticeUi, noticeSolution, noticeOutcome] = c.hero.notice.links;
+---
+
+<Project
+  title={c.title}
+  description={c.description}
+  project={{ title: "Praieros", meta: c.meta }}
+  sections={sections}
+>
+  <!-- Abertura -->
+  <header class="hero">
+    <h1>
+      {
+        c.hero.title.map((line, i) => (
+          <>
+            {i > 0 && <br />}
+            {line}
+          </>
+        ))
+      }
+    </h1>
+
+    <div class="hero__media">
+      <Figure src={`${img}/hero.webp`} alt={c.hero.alt} width={2560} height={1630} eager />
+      <Meta items={c.hero.meta} />
+    </div>
+
+    <Notice
+      text={c.hero.notice.text}
+      hint={c.hero.notice.hint}
+      links={[
+        { label: noticeUi, href: "#ui-highlights" },
+        { label: noticeSolution, href: "#solution" },
+        { label: noticeOutcome, href: "#outcome" },
+      ]}
+    />
+  </header>
+
+  <Section id="overview" label={label("overview")}>
+    <div class="case-block">
+      <h2>{c.overview.title}</h2>
+      {c.overview.paragraphs.map((p) => <p>{p}</p>)}
+    </div>
+  </Section>
+
+  <Section id="context" label={label("context")}>
+    <div class="case-block">
+      {c.context.intro.map((p) => <p>{p}</p>)}
+    </div>
+
+    <Figure
+      src={`${img}/bulletin.webp`}
+      alt={c.context.bulletinAlt}
+      width={2560}
+      height={2004}
+      caption={c.context.bulletinCaption}
+    />
+
+    <div class="case-block">
+      {c.context.after.map((p) => <p>{p}</p>)}
+    </div>
+
+    <h2>{c.context.statement}</h2>
+  </Section>
+
+  <Section id="problem" label={label("problem")}>
+    <div class="case-block">
+      <h2>{c.problem.title}</h2>
+      <p>{c.problem.text}</p>
+    </div>
+
+    <Figure
+      src={`${img}/research-map.webp`}
+      alt={c.problem.mapAlt}
+      width={2560}
+      height={2444}
+      caption={c.problem.mapCaption}
+    />
+
+    <div class="case-tight">
+      <div class="case-cards">
+        {c.problem.cards.map((card) => <Card {...card} />)}
+      </div>
+      <p class="case-caption">{c.problem.cardsCaption}</p>
+    </div>
+
+    <blockquote class="case-quote">
+      <p class="case-label">{c.problem.quoteLabel}</p>
+      <p class="case-quote__text">{c.problem.quote}</p>
+    </blockquote>
+
+    <p>{c.problem.closing}</p>
+  </Section>
+
+  <Section id="solution" label={label("solution")} gap="2xl">
+    <div class="case-block">
+      <h2>{c.solution.title}</h2>
+      <p>{c.solution.text}</p>
+    </div>
+
+    <Figure
+      src={`${img}/beach-page.webp`}
+      alt={c.solution.pageAlt}
+      width={2560}
+      height={1630}
+      caption={c.solution.pageCaption}
+    />
+
+    <div class="case-tight">
+      <div class="case-cards">
+        {c.solution.cards.map((card) => <Card {...card} />)}
+      </div>
+      <p class="case-caption">{c.solution.cardsCaption}</p>
+    </div>
+  </Section>
+
+  <Section id="ui-highlights" label={label("ui-highlights")}>
+    <div class="case-group">
+      <div class="case-block">
+        <h2>{c.ui.title}</h2>
+        <p>{c.ui.text}</p>
+      </div>
+
+      <div class="case-figures">
+        <Figure
+          src={`${img}/ui-map.webp`}
+          alt={c.ui.mapAlt}
+          width={2560}
+          height={1630}
+          caption={c.ui.mapCaption}
+        />
+        <div class="case-figure-row">
+          <Figure
+            src={`${img}/ui-marker.webp`}
+            video={`${img}/ui-marker.webm`}
+            alt={c.ui.markerAlt}
+            width={1280}
+            height={1630}
+            caption={c.ui.markerCaption}
+          />
+          <Figure
+            src={`${img}/ui-search.webp`}
+            alt={c.ui.searchAlt}
+            width={1280}
+            height={1630}
+            caption={c.ui.searchCaption}
+          />
+        </div>
+        <Figure
+          src={`${img}/ui-terms.webp`}
+          alt={c.ui.termsAlt}
+          width={2600}
+          height={1656}
+          caption={c.ui.termsCaption}
+        />
+        <Figure
+          src={`${img}/ui-no-result.webp`}
+          alt={c.ui.noResultAlt}
+          width={2560}
+          height={1630}
+          caption={c.ui.noResultCaption}
+        />
+        <Figure
+          src={`${img}/ui-kit.webp`}
+          alt={c.ui.kitAlt}
+          width={2600}
+          height={1656}
+          caption={c.ui.kitCaption}
+        />
+      </div>
+    </div>
+
+    <LinkOut href={liveUrl} label={c.ui.live} />
+  </Section>
+
+  <Section id="process" label={label("process")} gap="2xl">
+    <h2>{c.process.title}</h2>
+
+    <div class="steps">
+      {c.process.steps.map((step) => <Step {...step} />)}
+    </div>
+
+    <div class="case-block">
+      <p>{c.process.rulesIntro}</p>
+      <ol>
+        {c.process.rules.map((rule) => <li>{rule}</li>)}
+      </ol>
+    </div>
+  </Section>
+
+  <Section id="outcome" label={label("outcome")} gap="2xl">
+    <div class="case-block">
+      <h2>{c.outcome.title}</h2>
+      <p>{c.outcome.text}</p>
+    </div>
+
+    <OutcomeTable heads={c.outcome.heads} rows={c.outcome.rows} />
+
+    <div class="case-note">
+      <p class="case-label">{c.outcome.nextLabel}</p>
+      <p>{c.outcome.nextText}</p>
+      <ol>
+        {c.outcome.nextQuestions.map((q) => <li>{q}</li>)}
+      </ol>
+    </div>
+
+    <blockquote class="case-quote">
+      <p class="case-label">{c.outcome.takeawayLabel}</p>
+      <p class="case-quote__text">{c.outcome.takeaway}</p>
+    </blockquote>
+
+    <p>{c.outcome.closing}</p>
+
+    <LinkOut href={liveUrl} label={c.outcome.open} />
+  </Section>
+</Project>
+
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-3xl);
+  }
+
+  .hero__media {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xl);
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-20);
+  }
+</style>

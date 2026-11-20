@@ -1,0 +1,439 @@
+---
+import { getLang, localizedPath, switchPath, useUI, type Lang } from "../i18n";
+
+// Páginas de case passam `project`: a navbar troca a marca e o menu central
+// pelo "voltar + Projeto / Tipo, ano". O seletor de idioma é o mesmo.
+interface Props {
+  project?: { title: string; meta: string; backHref?: string };
+  // Item do menu em destaque (padrão: Projetos, a home)
+  current?: "projects" | "about";
+}
+
+const { project, current = "projects" } = Astro.props;
+
+const lang = getLang(Astro.url);
+const t = useUI(lang).header;
+// Projetos → âncora da home; Sobre → página própria; Currículo segue como âncora
+// Fora da home, Projetos leva ao topo dela (com a âncora, caía direto nos cards, perto do rodapé)
+const navHrefs = [current === "projects" ? "#projects" : localizedPath(lang),localizedPath(lang, "/about"), "#resume"];
+const navKeys = ["projects", "about", "resume"];
+const nav = t.nav.map((item, i) => ({
+  ...item,
+  href: navHrefs[i],
+  active: navKeys[i] === current,
+}));
+
+// O seletor leva à mesma página no outro idioma
+// `name` é o rótulo da transição de troca de idioma: o nome do idioma de destino, na própria língua
+const languages: { code: Lang; label: string; name: string; href: string }[] = [
+  { code: "en", label: "EN", name: "English (EN)", href: switchPath(Astro.url, "en") },
+  { code: "pt", label: "PT", name: "Português (PT-BR)", href: switchPath(Astro.url, "pt") },
+];
+---
+
+<header class:list={["header", { "header--project": project }]} data-header>
+  <div class="header__bar">
+    {
+      project ? (
+        <div class="header__project">
+          <a class="header__back" href={project.backHref ?? localizedPath(lang)} aria-label={t.back}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M7 3L2 8L7 13M2 8H14"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+          <p class="header__crumb">
+            <span>{project.title}</span>
+            <svg width="7" height="13" viewBox="0 0 6.368 12.72" fill="none" aria-hidden="true">
+              <path d="M6.368 0L1.6 12.72H0L4.768 0H6.368Z" fill="currentColor" />
+            </svg>
+            <span class="header__meta">{project.meta}</span>
+          </p>
+        </div>
+      ) : (
+        <a class="header__brand" href={localizedPath(lang)}>Caio Marinho</a>
+      )
+    }
+
+    {
+      !project && (
+        <nav class="header__nav" aria-label={t.navLabel}>
+          {nav.map((item, i) => (
+            <a
+              class:list={["hover-line", { "is-muted": !item.active }]}
+              href={item.href}
+              aria-current={item.active ? "true" : undefined}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      )
+    }
+
+    <div class="header__actions">
+      <div class="header__lang" role="group" aria-label={t.languageLabel}>
+        {
+          languages.map((option) => (
+            <a
+              class:list={["hover-line", "lang", { "is-muted": option.code !== lang }]}
+              href={option.href}
+              lang={option.code}
+              hreflang={option.code}
+              data-lang-switch
+              data-pt-label={option.name}
+              aria-current={option.code === lang ? "true" : undefined}
+            >
+              {option.label}
+            </a>
+          ))
+        }
+      </div>
+
+      {
+        !project && (
+          <button
+            type="button"
+            class="menu-toggle"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            aria-label={t.openMenu}
+            data-label-open={t.openMenu}
+            data-label-close={t.closeMenu}
+            data-menu-toggle
+          >
+            <span class="menu-toggle__line" />
+            <span class="menu-toggle__line" />
+          </button>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    !project && (
+      <nav class="mobile-menu" id="mobile-menu" aria-label={t.menuLabel} inert data-menu>
+        {nav.map((item, i) => (
+          <a
+            class:list={["mobile-menu__link", { "is-active": item.active }]}
+            href={item.href}
+            style={`--i: ${i}`}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+    )
+  }
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const toggle = header?.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const menu = header?.querySelector<HTMLElement>("[data-menu]");
+  const desktop = window.matchMedia("(min-width: 768px)");
+
+  function setOpen(open: boolean) {
+    if (!header || !toggle || !menu) return;
+    header.toggleAttribute("data-open", open);
+    document.documentElement.toggleAttribute("data-menu-open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute(
+      "aria-label",
+      (open ? toggle.dataset.labelClose : toggle.dataset.labelOpen) ?? "",
+    );
+    menu.toggleAttribute("inert", !open);
+  }
+
+  toggle?.addEventListener("click", () => setOpen(!header?.hasAttribute("data-open")));
+  menu?.addEventListener("click", (e) => {
+    if ((e.target as Element).closest("a")) setOpen(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && header?.hasAttribute("data-open")) {
+      setOpen(false);
+      toggle?.focus();
+    }
+  });
+  desktop.addEventListener("change", (e) => {
+    if (e.matches) setOpen(false);
+  });
+</script>
+
+<style>
+  .header {
+    position: relative;
+    height: 56px;
+  }
+
+  /*
+   * Páginas de case: a barra acompanha o scroll (sticky, no fluxo, sem pular o
+   * conteúdo) e tem o fundo da página (surface), para o texto que rola por trás
+   * não atrapalhar a leitura dela, no mobile e no desktop.
+   */
+  .header--project {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--surface-default);
+  }
+
+  /* Âncoras do índice não ficam escondidas atrás da barra fixa */
+  :global(html:has(.header--project)) {
+    scroll-padding-top: 72px;
+  }
+
+  .header__bar {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-inset-md) var(--space-inset-xl);
+  }
+
+  /* Aberto: a barra fixa no topo para o X continuar visível com a página rolada */
+  [data-open] .header__bar {
+    position: fixed;
+    inset: 0 0 auto;
+    height: 56px;
+  }
+
+  :global(html[data-menu-open]) {
+    overflow: hidden;
+  }
+
+  /* ── Variante de case: voltar + Projeto / Tipo, ano ── */
+  .header__project {
+    display: flex;
+    align-items: center;
+    gap: var(--space-inline-xs);
+  }
+
+  .header__back {
+    display: flex;
+  }
+
+  .header__crumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+    white-space: nowrap;
+  }
+
+  .header__meta {
+    color: var(--content-tertiary);
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-inline-xl);
+  }
+
+  /* ── Menu mobile ─────────────────────────────────── */
+  .menu-toggle {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /*
+   * Morph hambúrguer → X: as duas linhas partem de y=±3px e convergem
+   * para o centro enquanto giram ±45°. Só transform é animado (GPU),
+   * com a mesma curva do restante do site.
+   */
+  .menu-toggle__line {
+    position: absolute;
+    top: 50%;
+    left: 2px;
+    width: 20px;
+    height: 1.5px;
+    margin-top: -0.75px;
+    background: currentColor;
+    border-radius: 1px;
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+
+  .menu-toggle__line:nth-child(1) {
+    transform: translateY(-3px);
+  }
+
+  .menu-toggle__line:nth-child(2) {
+    transform: translateY(3px);
+  }
+
+  [data-open] .menu-toggle__line:nth-child(1) {
+    transform: translateY(0) rotate(45deg);
+  }
+
+  [data-open] .menu-toggle__line:nth-child(2) {
+    transform: translateY(0) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-lg);
+    padding: calc(56px + var(--space-stack-5xl)) var(--space-inset-xl) var(--space-inset-xl);
+    background: var(--surface-default);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--duration-base) var(--ease-standard),
+      visibility 0s linear var(--duration-base);
+  }
+
+  [data-open] .mobile-menu {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .mobile-menu__link {
+    align-self: flex-start;
+    color: var(--content-tertiary);
+    font-family: var(--typo-heading-lg-family);
+    font-size: var(--typo-heading-lg-size);
+    font-weight: var(--typo-heading-lg-weight);
+    line-height: var(--typo-heading-lg-line-height);
+    letter-spacing: var(--typo-heading-lg-letter-spacing);
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      color var(--duration-base) var(--ease-standard),
+      opacity var(--duration-base) var(--ease-standard),
+      transform var(--duration-base) var(--ease-standard);
+  }
+
+  .mobile-menu__link.is-active,
+  .mobile-menu__link:hover,
+  .mobile-menu__link:focus-visible {
+    color: var(--content-primary);
+  }
+
+  [data-open] .mobile-menu__link {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0s, calc(var(--i) * 50ms + 60ms), calc(var(--i) * 50ms + 60ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu-toggle__line,
+    .mobile-menu,
+    .mobile-menu__link {
+      transition: none !important;
+    }
+  }
+
+  /* Mobile: nav central some; desktop: toggle e painel somem */
+  .header__nav {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .header__nav {
+      display: flex;
+    }
+
+    .menu-toggle,
+    .mobile-menu {
+      display: none;
+    }
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .header__nav {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    align-items: center;
+    gap: var(--space-gap-xl);
+    transform: translate(-50%, -50%);
+  }
+
+  /*
+   * Hover: a linha entra da esquerda para a direita e, na saída,
+   * recolhe de volta para a esquerda (origin: left fixa; só o scaleX
+   * é animado). Linha colada na base do texto, sem inset.
+   * No seletor de idioma, o idioma ativo não recebe o efeito.
+   */
+  .hover-line {
+    position: relative;
+    display: inline-block;
+  }
+
+  .hover-line::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+
+  .hover-line:not([aria-pressed="true"], [aria-current="true"]):hover::after,
+  .hover-line:not([aria-pressed="true"], [aria-current="true"]):focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hover-line::after {
+      transition: none;
+    }
+  }
+
+  .header__lang {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+  }
+
+  /* Herda a tipografia do navbar */
+  .lang {
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .is-muted {
+    color: var(--content-tertiary);
+    transition: color var(--duration-base) var(--ease-standard);
+  }
+
+  /* Idioma desativado: no hover/foco a cor vira primária (a linha acompanha) */
+  .is-muted:hover,
+  .is-muted:focus-visible {
+    color: var(--content-primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .is-muted {
+      transition: none;
+    }
+  }
+</style>

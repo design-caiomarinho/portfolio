@@ -1,0 +1,471 @@
+---
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { getLang, langPaths } from "../../i18n";
+import { about, contact } from "../../i18n/about";
+
+// Gera "/about" (en) e "/pt/about" (pt) a partir deste único arquivo
+export const getStaticPaths = langPaths;
+
+const lang = getLang(Astro.url);
+const t = about[lang];
+
+const links = [
+  { label: t.links.linkedin, href: contact.linkedin, icon: "/icons/linkedin.svg", external: true },
+  { label: t.links.email, href: `mailto:${contact.email}`, icon: "/icons/mail.svg", external: false },
+  { label: t.links.github, href: contact.github, icon: "/icons/github.svg", external: true },
+];
+---
+
+<Base title={t.title} description={t.description}>
+  <Header current="about" />
+  <main class="about">
+    <section class="about__hero">
+      <div class="about__hero-content">
+        <div class="about__hero-text">
+          <h1 class="about__title" data-reveal style="--reveal-delay: 0.4s">{t.hero.title}</h1>
+          <p class="about__lead" data-reveal style="--reveal-delay: 0.48s">{t.hero.text}</p>
+        </div>
+        <button
+          type="button"
+          class="copy"
+          data-copy={contact.email}
+          data-reveal
+          style="--reveal-delay: 0.56s"
+        >
+          <!--
+            O conteúdo (texto + ícone) acompanha o texto atual, com o gap de sempre.
+            O "régua" invisível reserva a largura do maior rótulo: a área do botão
+            não encolhe ao copiar, então o hover não se perde com o mouse parado.
+          -->
+          <span class="copy__content">
+            <span class="copy__label">
+              <span class="copy__text" data-copy-text>{t.hero.copyEmail}</span>
+              <span class="copy__text copy__text--done" aria-hidden="true" data-copy-text>{t.hero.copied}</span>
+            </span>
+            <span class="icon" style="--icon: url(/icons/copy.svg)" aria-hidden="true" />
+          </span>
+          <span class="copy__sizer" aria-hidden="true">
+            <span class="copy__sizer-text">
+              <span>{t.hero.copyEmail}</span>
+              <span>{t.hero.copied}</span>
+            </span>
+            <span class="icon" />
+          </span>
+          <span class="visually-hidden" role="status" data-copy-status></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="about__body">
+      <div class="about__story">
+        <p class="about__text" data-story>{t.intro}</p>
+        {
+          t.sections.map((section) => (
+            <div class="about__block" data-story>
+              <h2 class="about__heading">{section.title}</h2>
+              <p class="about__text">{section.text}</p>
+            </div>
+          ))
+        }
+
+        <ul class="experience" aria-label={t.experienceLabel}>
+          {
+            t.experience.map((item, i) => (
+              <li class="experience__row" data-story>
+                <span class:list={["experience__period", { "is-now": i === 0 }]}>{item.period}</span>
+                <div class="experience__info">
+                  <p class="experience__company">{item.company}</p>
+                  <p class="experience__role">{item.role}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <ul class="links" data-story>
+        {
+          links.map((link) => (
+            <li>
+              <a
+                class="links__item"
+                href={link.href}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noopener noreferrer" : undefined}
+              >
+                <span class="icon" style={`--icon: url(${link.icon})`} aria-hidden="true" />
+                <span>{link.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  // Entrada por scroll: cada bloco do texto sobe com fade ao entrar na viewport;
+  // os que entram juntos aparecem em cascata (mesmo padrão das páginas de case)
+  const blocks = document.querySelectorAll<HTMLElement>("[data-story]");
+  let initialPass = true;
+  setTimeout(() => (initialPass = false), 300);
+
+  const revealer = new IntersectionObserver(
+    (entries) => {
+      entries
+        .filter((e) => e.isIntersecting)
+        .forEach((entry, i) => {
+          const el = entry.target as HTMLElement;
+          el.style.setProperty("--reveal-delay", `${(initialPass ? 0.5 : 0) + i * 0.1}s`);
+          el.setAttribute("data-in-view", "");
+          revealer.unobserve(el);
+        });
+    },
+    // Sem margem negativa: os links ficam colados no fim da página e, com margem,
+    // nunca chegariam a entrar na área observada (ficavam invisíveis)
+    { rootMargin: "0px" },
+  );
+  blocks.forEach((el) => {
+    el.setAttribute("data-reveal-scroll", "");
+    revealer.observe(el);
+  });
+
+  // "Copy email": copia o endereço e troca o rótulo por um instante
+  const button = document.querySelector<HTMLButtonElement>("[data-copy]");
+  const status = button?.querySelector<HTMLElement>("[data-copy-status]");
+  const done = button?.querySelector<HTMLElement>(".copy__text--done");
+  let timer: number | undefined;
+
+  // Largura de cada texto, para a largura do rótulo animar entre os dois
+  function measure() {
+    const [text, copied] = Array.from(button?.querySelectorAll<HTMLElement>("[data-copy-text]") ?? []);
+    if (!button || !text || !copied) return;
+    button.style.setProperty("--w-copy", `${Math.ceil(text.getBoundingClientRect().width)}px`);
+    button.style.setProperty("--w-copied", `${Math.ceil(copied.getBoundingClientRect().width)}px`);
+  }
+  document.fonts.ready.then(measure);
+
+  button?.addEventListener("click", async () => {
+    if (!button.dataset.copy) return;
+    try {
+      await navigator.clipboard.writeText(button.dataset.copy);
+    } catch {
+      return;
+    }
+    button.classList.add("is-copied");
+    if (status) status.textContent = done?.textContent ?? "";
+    clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      button.classList.remove("is-copied");
+      if (status) status.textContent = "";
+    }, 1600);
+  });
+</script>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* ── Hero (esquerda no desktop; no mobile abre a página) ── */
+  .about__hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 450px;
+    padding: var(--space-inset-xl);
+  }
+
+  .about__hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xl);
+    align-items: flex-start;
+  }
+
+  .about__hero-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    max-width: 425px;
+  }
+
+  .about__title {
+    font-family: var(--typo-heading-lg-family);
+    font-size: var(--typo-heading-lg-size);
+    font-weight: var(--typo-heading-lg-weight);
+    line-height: var(--typo-heading-lg-line-height);
+    letter-spacing: var(--typo-heading-lg-letter-spacing);
+    color: var(--content-primary);
+    margin: 0;
+  }
+
+  .about__lead,
+  .about__text {
+    font-family: var(--typo-body-md-regular-family);
+    font-size: var(--typo-body-md-regular-size);
+    font-weight: var(--typo-body-md-regular-weight);
+    line-height: var(--typo-body-md-regular-line-height);
+    letter-spacing: var(--typo-body-md-regular-letter-spacing);
+    color: var(--content-secondary);
+  }
+
+  .copy {
+    display: inline-grid;
+    justify-items: start;
+    position: relative;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--content-primary);
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+  }
+
+  /* ── Corpo (direita no desktop) ── */
+  .about__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-5xl);
+    padding: var(--space-stack-xl) var(--space-inset-xl) var(--space-inset-xl);
+  }
+
+  .about__story {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-3xl);
+  }
+
+  .about__block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+  }
+
+  .about__heading {
+    font-family: var(--typo-heading-sm-family);
+    font-size: var(--typo-heading-sm-size);
+    font-weight: var(--typo-heading-sm-weight);
+    line-height: var(--typo-heading-sm-line-height);
+    letter-spacing: var(--typo-heading-sm-letter-spacing);
+    color: var(--content-primary);
+    margin: 0;
+  }
+
+  /* ── Experiência ── */
+  .experience {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-20);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .experience__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-gap-md);
+    padding-bottom: var(--space-inset-lg);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .experience__period {
+    font-family: var(--typo-body-sm-semibold-family);
+    font-size: var(--typo-body-sm-semibold-size);
+    font-weight: var(--typo-body-sm-semibold-weight);
+    line-height: var(--typo-body-sm-semibold-line-height);
+    letter-spacing: var(--typo-body-sm-semibold-letter-spacing);
+    color: var(--content-tertiary);
+    white-space: nowrap;
+  }
+
+  .experience__period.is-now {
+    color: var(--content-accent-secondary);
+  }
+
+  .experience__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-2xs);
+    width: min(100%, 281px);
+  }
+
+  /* Mobile: a coluna de empresa/cargo é mais estreita (239px no Figma) */
+  @media (max-width: 767.98px) {
+    .experience__info {
+      width: min(100%, 239px);
+    }
+  }
+
+  .experience__company {
+    font-family: var(--typo-body-md-semibold-family);
+    font-size: var(--typo-body-md-semibold-size);
+    font-weight: var(--typo-body-md-semibold-weight);
+    line-height: var(--typo-body-md-semibold-line-height);
+    letter-spacing: var(--typo-body-md-semibold-letter-spacing);
+    color: var(--content-primary);
+  }
+
+  .experience__role {
+    font-family: var(--typo-body-sm-regular-family);
+    font-size: var(--typo-body-sm-regular-size);
+    font-weight: var(--typo-body-sm-regular-weight);
+    line-height: var(--typo-body-sm-regular-line-height);
+    letter-spacing: var(--typo-body-sm-regular-letter-spacing);
+    color: var(--content-secondary);
+  }
+
+  /* ── Links ── */
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-gap-xl);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .links__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-inline-xs);
+    color: var(--content-primary);
+    text-decoration: none;
+  }
+
+  .copy__content,
+  .copy__sizer {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-inline-xs);
+  }
+
+  .copy__content {
+    position: relative;
+  }
+
+  /* Régua: ocupa a largura do maior rótulo, sem aparecer nem receber clique */
+  .copy__sizer {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .copy__sizer-text {
+    display: grid;
+  }
+
+  .copy__sizer-text > * {
+    grid-area: 1 / 1;
+  }
+
+  /*
+   * Os dois textos ficam sobrepostos e trocam na hora; a largura do rótulo
+   * anima entre a de cada texto (medidas por script em --w-copy / --w-copied),
+   * então o ícone e o sublinhado deslizam junto, com suavidade.
+   */
+  .copy__label {
+    display: grid;
+    /* Corta só nas laterais (a largura anima); em cima e embaixo sobra folga para o "y", "p"… */
+    clip-path: inset(-0.3em 0);
+    width: var(--w-copy, auto);
+    transition: width var(--duration-base) var(--ease-standard);
+  }
+
+  .copy.is-copied .copy__label {
+    width: var(--w-copied, auto);
+  }
+
+  .copy__text {
+    grid-area: 1 / 1;
+    justify-self: start;
+    white-space: nowrap;
+  }
+
+  /* O texto troca na hora; só a largura (e com ela o ícone e a linha) anima */
+  .copy__text--done,
+  .copy.is-copied .copy__text:not(.copy__text--done) {
+    visibility: hidden;
+  }
+
+  .copy.is-copied .copy__text--done {
+    visibility: visible;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /*
+   * Ícones: os SVGs são só a forma (máscara); a cor vem do token. Assim ícone e
+   * texto usam o mesmo --content-primary, sem cor fixa dentro do arquivo.
+   */
+  .icon {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    background-color: var(--content-primary);
+    mask: var(--icon) center / contain no-repeat;
+    -webkit-mask: var(--icon) center / contain no-repeat;
+  }
+
+  /* Hover: a linha entra da esquerda (mesma do menu) */
+  .links__item {
+    position: relative;
+  }
+
+  /* No botão de copiar a linha fica no conteúdo: acompanha o texto atual */
+  .links__item::after,
+  .copy__content::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -2px;
+    left: 0;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+
+  .links__item:hover::after,
+  .links__item:focus-visible::after,
+  .copy:hover .copy__content::after,
+  .copy:focus-visible .copy__content::after {
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy__label,
+    .links__item::after,
+    .copy__content::after {
+      transition: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .about {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    /* Alinha o início do texto com o do hero: 124px de respiro no topo (Figma) */
+    .about__body {
+      padding-top: 124px;
+    }
+  }
+</style>

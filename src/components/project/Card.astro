@@ -1,0 +1,103 @@
+---
+import { getLang, useUI } from "../../i18n";
+
+// Card de destaque. Com `sources`, vira card de evidência (pontinhos + contagem).
+interface Props {
+  label: string;
+  title: string;
+  text: string;
+  sources?: number;
+}
+
+const { label, title, text, sources } = Astro.props;
+const t = useUI(getLang(Astro.url)).project;
+---
+
+<article class:list={["card", { "card--evidence": sources }]}>
+  <p class="card__label">{label}</p>
+  <div class="card__body">
+    <h3>{title}</h3>
+    <p class="card__text">{text}</p>
+  </div>
+  {
+    sources && (
+      <div class="card__sources">
+        <div class="card__dots" aria-hidden="true">
+          {Array.from({ length: sources }, () => (
+            <span />
+          ))}
+        </div>
+        <p class="card__count">{t.sources(sources)}</p>
+      </div>
+    )
+  }
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-stack-md);
+    padding: var(--space-inset-lg);
+    overflow: clip;
+    background: var(--surface-accent-soft);
+    border: 1px solid var(--border-accent-soft);
+    border-radius: var(--radius-md);
+  }
+
+  .card--evidence {
+    gap: var(--space-stack-xl);
+  }
+
+  .card__label {
+    color: var(--content-accent-secondary);
+    font-family: var(--typo-body-sm-semibold-family);
+    font-size: var(--typo-body-sm-semibold-size);
+    font-weight: var(--typo-body-sm-semibold-weight);
+    line-height: var(--typo-body-sm-semibold-line-height);
+    letter-spacing: var(--typo-body-sm-semibold-letter-spacing);
+  }
+
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+  }
+
+  .card h3 {
+    color: var(--content-accent-primary);
+  }
+
+  .card__text {
+    color: var(--content-accent-secondary);
+  }
+
+  .card__sources {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+  }
+
+  .card__dots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-inline-2xs);
+  }
+
+  .card__dots span {
+    width: 12px;
+    height: 12px;
+    background: var(--surface-accent-default);
+    border-radius: var(--radius-md);
+  }
+
+  .card__count {
+    color: var(--content-accent-secondary);
+    font-family: var(--typo-body-sm-regular-family);
+    font-size: var(--typo-body-sm-regular-size);
+    font-weight: var(--typo-body-sm-regular-weight);
+    line-height: var(--typo-body-sm-regular-line-height);
+    letter-spacing: var(--typo-body-sm-regular-letter-spacing);
+  }
+</style>

@@ -1,0 +1,159 @@
+---
+import { getLang, useUI } from "../i18n";
+
+interface Props {
+  title: string;
+  meta?: string;
+  id?: string;
+  href?: string;
+  /** Thumb (2000×1493). Preenche o quadro e recorta pelas laterais/topo (object-fit: cover). */
+  image?: string;
+  /** Imagem acima da dobra: carrega já, sem lazy. */
+  eager?: boolean;
+}
+
+const { title, meta, id, href, image, eager = false } = Astro.props;
+const t = useUI(getLang(Astro.url)).project;
+const Tag = href ? "a" : "div";
+---
+
+<section class="project" id={id}>
+  <Tag
+    class="project__inner"
+    href={href}
+    aria-label={href ? (meta ? `${title}, ${meta}` : title) : undefined}
+  >
+    <p class="project__label" data-reveal-scroll style="--reveal-y: 80px; --reveal-delay: 0.7s">
+      <span>{title}</span>
+      {
+        meta && (
+          <>
+            <svg
+              class="project__slash"
+              width="7"
+              height="13"
+              viewBox="0 0 7 13"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path d="M6 0.5 1 12.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+            <span class="project__meta">{meta}</span>
+          </>
+        )
+      }
+    </p>
+
+    <!-- Sem `image`, fica o bloco cinza de placeholder -->
+    <div
+      class="project__media"
+      role="img"
+      aria-label={t.preview(title)}
+      data-reveal-scroll
+      style="--reveal-y: 80px; --reveal-delay: 0.8s"
+    >
+      {
+        image && (
+          <img
+            class="project__img"
+            src={image}
+            alt=""
+            width={2000}
+            height={1493}
+            loading={eager ? "eager" : "lazy"}
+            fetchpriority={eager ? "high" : undefined}
+            decoding="async"
+          />
+        )
+      }
+    </div>
+  </Tag>
+</section>
+
+<script>
+  // Cada projeto repete a animação de entrada do site ao entrar na viewport,
+  // só na primeira vez.
+  // Os que já estão visíveis ao carregar mantêm os atrasos da sequência de
+  // abertura (0,7s / 0,8s); os demais animam sem espera conforme o scroll.
+  const projects = document.querySelectorAll<HTMLElement>(".project");
+  let initialPass = true;
+  setTimeout(() => (initialPass = false), 300);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const items = entry.target.querySelectorAll<HTMLElement>("[data-reveal-scroll]");
+        if (entry.isIntersecting) {
+          if (!initialPass) {
+            items.forEach((el, i) => el.style.setProperty("--reveal-delay", `${i * 0.1}s`));
+          }
+          items.forEach((el) => el.setAttribute("data-in-view", ""));
+          observer.unobserve(entry.target);
+        }
+      }
+    },
+    { rootMargin: "0px 0px -10% 0px" },
+  );
+
+  projects.forEach((project) => observer.observe(project));
+</script>
+
+<style>
+  /* Margem lateral e espaço entre projetos ficam no grid da página (.projects) */
+
+  .project__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-gap-xs);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .project__label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+    font-size: var(--typo-label-md-size);
+    font-weight: var(--typo-label-md-weight);
+    line-height: var(--typo-label-md-line-height);
+    letter-spacing: var(--typo-label-md-letter-spacing);
+  }
+
+  .project__meta {
+    color: var(--content-tertiary);
+  }
+
+  .project__media {
+    width: 100%;
+    height: 600px;
+    border-radius: var(--radius-md);
+    /* Cor fixa do placeholder no Figma (#dedede), ainda sem token */
+    background: #dedede;
+    overflow: hidden;
+  }
+
+  .project__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+
+  /* Hover na thumb: a imagem amplia 10% dentro do quadro (o overflow recorta) */
+  .project__media:hover .project__img {
+    transform: scale(1.1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project__img {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .project__media {
+      height: 300px;
+    }
+  }
+</style>

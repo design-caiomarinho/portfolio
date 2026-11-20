@@ -1,0 +1,55 @@
+---
+// Seção do case: rótulo + filete e o corpo. `gap` ajusta o ritmo interno.
+interface Props {
+  id: string;
+  label: string;
+  gap?: "3xl" | "2xl";
+}
+
+const { id, label, gap = "3xl" } = Astro.props;
+---
+
+<section class="section" id={id} aria-label={label}>
+  <div class="section__head">
+    <p class="case-label">{label}</p>
+    <span class="section__rule"></span>
+  </div>
+  <div class:list={["section__body", `section__body--${gap}`]}>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-3xl);
+    scroll-margin-top: var(--space-inset-xl);
+  }
+
+  .section__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xl);
+  }
+
+  .section__rule {
+    flex: 1 1 0;
+    height: 1px;
+    min-width: 1px;
+    background: var(--border-default);
+  }
+
+  .section__body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section__body--3xl {
+    gap: var(--space-stack-3xl);
+  }
+
+  .section__body--2xl {
+    gap: var(--space-stack-2xl);
+  }
+</style>

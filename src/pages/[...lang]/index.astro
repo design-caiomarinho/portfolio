@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Hero from "../../components/Hero.astro";
+import ProjectPreview from "../../components/ProjectPreview.astro";
+import Footer from "../../components/Footer.astro";
+import { getLang, langPaths, localizedPath, useUI } from "../../i18n";
+
+// Gera "/" (en) e "/pt/" (pt) a partir deste único arquivo
+export const getStaticPaths = langPaths;
+
+const lang = getLang(Astro.url);
+---
+
+<Base title="Caio Marinho">
+  <Header />
+  <main>
+    <Hero />
+    <!-- Mobile: uma coluna. Desktop: grid de duas colunas -->
+    <div class="projects" id="projects">
+      <ProjectPreview
+        title="Praieros"
+        meta="Web App, 2026"
+        image="/projects/praieros/thumb.webp"
+        eager
+        href={localizedPath(lang, "/projects/praieros")}
+      />
+      <!-- Placeholder do próximo case: sem link nem meta até ter nome (basta passar title/meta/href) -->
+      <ProjectPreview title={useUI(lang).project.next} />
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .projects {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-stack-3xl) var(--space-gap-xl);
+    padding: 0 var(--space-inset-xl);
+  }
+
+  @media (min-width: 768px) {
+    .projects {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

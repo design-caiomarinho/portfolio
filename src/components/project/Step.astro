@@ -1,0 +1,43 @@
+---
+// Linha do processo: etapa à esquerda, título + texto à direita.
+interface Props {
+  label: string;
+  title: string;
+  text: string;
+}
+
+const { label, title, text } = Astro.props;
+---
+
+<div class="step">
+  <p class="case-label">{label}</p>
+  <div class="step__body">
+    <h3>{title}</h3>
+    <p>{text}</p>
+  </div>
+</div>
+
+<style>
+  .step {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-inline-md);
+    padding-bottom: var(--space-inset-lg);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .step__body {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+    width: min(500px, 100%);
+  }
+
+  @media (max-width: 599.98px) {
+    .step {
+      flex-direction: column;
+    }
+  }
+</style>

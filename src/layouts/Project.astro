@@ -1,0 +1,404 @@
+---
+import Base from "./Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/project.css";
+import { getLang, useUI } from "../i18n";
+
+/*
+ * Template das páginas de case. Cada projeto passa só o conteúdo (slot),
+ * os dados da navbar e a lista de seções do índice lateral.
+ */
+interface Props {
+  title: string;
+  description?: string;
+  project: { title: string; meta: string };
+  sections: { id: string; label: string }[];
+}
+
+const { title, description, project, sections } = Astro.props;
+const t = useUI(getLang(Astro.url)).project;
+---
+
+<Base title={title} description={description}>
+  <Header project={project} />
+  <main class="case">
+    <div class="case__layout">
+      <div class="case__content">
+        <slot />
+      </div>
+
+      <aside class="case__index">
+        <nav aria-label={t.sectionsLabel} data-index data-collapsed>
+          {
+            sections.map((section, i) => (
+              <a
+                href={`#${section.id}`}
+                data-target={section.id}
+                aria-current={i === 0 ? "location" : undefined}
+              >
+                <span class="dot" aria-hidden="true" />
+                <span class="label">{section.label}</span>
+              </a>
+            ))
+          }
+        </nav>
+      </aside>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  // Índice lateral: destaca a seção que está no topo da leitura.
+  const index = document.querySelector<HTMLElement>("[data-index]");
+  const links = index ? Array.from(index.querySelectorAll<HTMLAnchorElement>("a")) : [];
+  const sections = links
+    .map((link) => document.getElementById(link.dataset.target ?? ""))
+    .filter((el): el is HTMLElement => el !== null);
+
+
+  /*
+   * Animação de entrada do site (a mesma da home): cada bloco do case sobe com
+   * fade ao entrar na viewport, a cada momento do scroll, só na primeira vez que ele aparece. Os blocos são marcados
+   * aqui, então o conteúdo das páginas não precisa de atributo nenhum.
+   */
+  const GROUPS = '.case-group, .case-figures, .hero__media';
+  const blocks: HTMLElement[] = [];
+  function collect(parent: Element) {
+    for (const child of Array.from(parent.children) as HTMLElement[]) {
+      if (child.matches(GROUPS)) collect(child);
+      else blocks.push(child);
+    }
+  }
+  document.querySelectorAll('.case__content > *').forEach((el) => {
+    if (el.matches('.section')) {
+      const head = el.querySelector('.section__head');
+      const body = el.querySelector('.section__body');
+      if (head) blocks.push(head as HTMLElement);
+      if (body) collect(body);
+    } else {
+      collect(el);
+    }
+  });
+
+  let initialPass = true;
+  setTimeout(() => (initialPass = false), 300);
+
+  const revealer = new IntersectionObserver(
+    (entries) => {
+      // Vários blocos entrando juntos aparecem em cascata
+      const entering = entries.filter((e) => e.isIntersecting);
+      entering.forEach((entry, i) => {
+        const el = entry.target as HTMLElement;
+        el.style.setProperty("--reveal-delay", `${(initialPass ? 0.2 : 0) + i * 0.1}s`);
+        el.setAttribute("data-in-view", "");
+        revealer.unobserve(el);
+      });
+    },
+    { rootMargin: '0px 0px -10% 0px' },
+  );
+
+  blocks.forEach((el) => {
+    el.setAttribute('data-reveal-scroll', '');
+    revealer.observe(el);
+  });
+  // Blocos preparados (cada um já nasce escondido): libera a coluna de conteúdo.
+  // Até aqui ela fica invisível (ver .case__content), sem flash do texto antes da animação.
+  document.querySelector('.case__content')?.setAttribute('data-ready', '');
+
+  // A coluna reserva a largura do menu (fixo, fora do fluxo)
+  const column = index?.parentElement as HTMLElement | null;
+  function fitColumn() {
+    if (!index || !column) return;
+    const needed = Math.ceil(index.offsetWidth) + 48; // 24px de respiro em cada lado
+    const width = Math.max(needed, 136);
+    column.style.width = `${width}px`;
+    // O espaçador da esquerda (::before) copia essa largura: o texto fica centrado na tela
+    column.parentElement?.style.setProperty("--index-w", `${width}px`);
+    // Distância que ponto e texto percorrem ao recolher: a borda direita do ponto termina na borda direita do menu
+    const dot = parseFloat(getComputedStyle(index).getPropertyValue("--dot")) || 4;
+    index.style.setProperty("--slide", `${index.offsetWidth - dot}px`);
+  }
+  fitColumn();
+
+  /*
+   * Interação simples: mouse na área do menu, ele aparece; mouse fora, some
+   * (fica só o esqueleto de pontos). A zona é um pouco maior que o menu, então
+   * ele abre ao se aproximar, sem precisar encostar. Foco de teclado também abre.
+   */
+  const ZONE_X = 72; // alcance horizontal da zona, à esquerda do menu
+  const ZONE_Y = 40; // folga vertical acima e abaixo
+
+  let inZone = false;
+  let focused = false;
+
+  function sync() {
+    index?.toggleAttribute("data-collapsed", !(inZone || focused));
+  }
+
+  document.addEventListener(
+    "pointermove",
+    (e) => {
+      if (!index || e.pointerType === "touch") return;
+      const r = index.getBoundingClientRect();
+      const inside =
+        e.clientX >= r.left - ZONE_X &&
+        e.clientY >= r.top - ZONE_Y &&
+        e.clientY <= r.bottom + ZONE_Y;
+      if (inside === inZone) return;
+      inZone = inside;
+      sync();
+    },
+    { passive: true },
+  );
+  document.documentElement.addEventListener("pointerleave", () => {
+    inZone = false;
+    sync();
+  });
+
+  index?.addEventListener("focusin", (e) => {
+    // Só foco de teclado segura o menu aberto (o foco deixado por um clique não)
+    focused = (e.target as Element).matches(":focus-visible");
+    sync();
+  });
+  index?.addEventListener("focusout", () => {
+    focused = false;
+    sync();
+  });
+
+  // Fonte carregada pode mudar a largura do menu
+  document.fonts?.ready.then(fitColumn);
+
+  let ticking = false;
+
+  function update() {
+    ticking = false;
+    // A seção ativa é a última cujo topo já passou de 35% da altura da janela
+    const line = window.innerHeight * 0.35;
+    let active = 0;
+    sections.forEach((section, i) => {
+      if (section.getBoundingClientRect().top <= line) active = i;
+    });
+    // No fim da página, a última seção sempre fica ativa
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+      active = sections.length - 1;
+    }
+    links.forEach((link, i) => {
+      if (i === active) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+
+  if (sections.length) {
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", () => {
+      fitColumn();
+      onScroll();
+    });
+    update();
+  }
+</script>
+
+<style>
+  .case__layout {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  /*
+   * O índice ocupa uma coluna só à direita; sem contrapeso o texto ficaria
+   * deslocado para a esquerda. Este espaçador tem a mesma largura (--index-w,
+   * ajustada por script) e mantém a coluna de leitura no centro da tela.
+   */
+  .case__layout::before {
+    content: "";
+    flex: none;
+    width: var(--index-w, 8.5rem);
+  }
+
+  .case__content {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-stack-5xl);
+    min-width: 0;
+    padding: var(--space-inset-6xl) var(--space-inset-xl) var(--space-inset-3xl);
+  }
+
+  /*
+   * Os blocos só ganham o estado "escondido" quando o script roda (depois da
+   * primeira pintura). Para o texto não aparecer e sumir, a coluna fica
+   * invisível até o script marcar data-ready. O keyframe garante que a página
+   * nunca fique em branco se o script falhar (aparece após 2s).
+   */
+  :global(.js) .case__content:not([data-ready]) {
+    opacity: 0;
+    animation: pt-failsafe 0s linear 2s forwards;
+  }
+
+  /* Toda seção/bloco de topo ocupa a coluna de leitura de 700px */
+  .case__content > :global(*) {
+    width: min(700px, 100%);
+  }
+
+  /*
+   * A coluna só reserva o espaço (largura ajustada por script quando o menu
+   * é mais largo). O menu em si é fixo e centralizado na vertical da tela,
+   * sem depender do scroll; na horizontal ele fica onde a coluna o colocaria.
+   */
+  .case__index {
+    flex: none;
+    width: 8.5rem;
+    padding: 0 var(--space-inset-xl);
+  }
+
+  .case__index nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+    padding-block: var(--space-inset-sm);
+    white-space: nowrap;
+    transition: gap var(--duration-base) var(--ease-standard);
+  }
+
+  .case__index a {
+    position: relative;
+    display: block;
+    height: 16px;
+    color: var(--content-tertiary);
+    text-decoration: none;
+    transition:
+      color var(--duration-base) var(--ease-standard),
+      opacity var(--duration-base) var(--ease-standard),
+      height var(--duration-base) var(--ease-standard);
+  }
+
+  /*
+   * Cada item é [ponto] + texto. Aberto, o texto fica no lugar; recolhido, ele
+   * desliza para a direita junto com o ponto e some; o ponto (o "traço") fica.
+   * Sem overflow/clip: o texto é só deslocado e esmaecido, na curva do site.
+   */
+  .case__index a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-gap-xs);
+  }
+
+  /* Não selecionado: terciário a 70%. Hover/foco: terciário a 100%. Ativo: primário a 100% */
+  .case__index a {
+    opacity: 0.7;
+  }
+
+  .case__index a:hover,
+  .case__index a:focus-visible {
+    opacity: 1;
+  }
+
+  .case__index a[aria-current] {
+    color: var(--content-primary);
+    opacity: 1;
+  }
+
+  /*
+   * Círculo de 4px (ativo ou não), ainda sem token; herda a cor do item.
+   * O .dot é um encaixe fixo de 6px (o texto nunca se desloca); o círculo
+   * vive dentro dele e, recolhido, estica só em largura, para a esquerda (ancorado pela direita), até virar um
+   * retângulo de --rail-h por --rail-w, centrado na linha.
+   */
+  .case__index nav {
+    --dot: 4px;
+    --rail-w: 8px;
+    --rail-h: 3px;
+    --rail-w-active: 12px; /* o selecionado é 4px mais largo */
+  }
+
+  .dot {
+    position: relative;
+    flex: none;
+    width: var(--dot);
+    height: var(--dot);
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+
+  .dot::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: var(--dot);
+    height: var(--dot);
+    background: currentColor;
+    border-radius: 999px;
+    transition:
+      width var(--duration-base) var(--ease-standard),
+      height var(--duration-base) var(--ease-standard),
+      top var(--duration-base) var(--ease-standard);
+  }
+
+  .label {
+    display: block;
+    transition:
+      opacity var(--duration-base) var(--ease-standard),
+      transform var(--duration-base) var(--ease-standard);
+  }
+
+  /* Recolhido: ponto e texto viajam juntos até a borda direita do menu
+     (--slide, medido por script); o texto esmaece no caminho e o ponto fica */
+  .case__index nav[data-collapsed] .dot,
+  .case__index nav[data-collapsed] .label {
+    transform: translateX(var(--slide, 80px));
+  }
+
+  /* Ancorado pela direita: a borda direita acompanha o texto e o corpo estica para a esquerda */
+  .case__index nav[data-collapsed] .dot::before {
+    top: calc((var(--dot) - var(--rail-h)) / 2);
+    width: var(--rail-w);
+    height: var(--rail-h);
+  }
+
+  /* Ao rolar, o traço da seção que sai encolhe e o da que entra estica (mesma curva, só largura, ancorado pela direita) */
+  .case__index nav[data-collapsed] a[aria-current] .dot::before {
+    width: var(--rail-w-active);
+  }
+
+
+  .case__index nav[data-collapsed] .label {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .case__index nav,
+    .case__index a,
+    .dot,
+    .dot::before,
+    .label {
+      transition: none !important;
+    }
+  }
+
+  /* Sem espaço para o índice: some, e o conteúdo usa a largura toda */
+  @media (max-width: 1023.98px) {
+    .case__index,
+    .case__layout::before {
+      display: none;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .case__content {
+      gap: var(--space-stack-3xl);
+      padding-top: var(--space-inset-3xl);
+    }
+  }
+</style>

@@ -1,0 +1,115 @@
+---
+import "../styles/global.css";
+import PageTransition from "../components/PageTransition.astro";
+import ptLabelFont from "../assets/pt-label.woff2?inline";
+import workSansLatin from "@fontsource-variable/work-sans/files/work-sans-latin-wght-normal.woff2?url";
+import { getLang, htmlLang, languages, switchPath, useUI } from "../i18n";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const lang = getLang(Astro.url);
+const { title, description = useUI(lang).site.description } = Astro.props;
+---
+
+<!doctype html>
+<html lang={htmlLang[lang]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    {
+      // hreflang exige URL absoluta: só sai com `site` definido no astro.config
+      Astro.site &&
+        languages.map((code) => (
+          <link
+            rel="alternate"
+            hreflang={htmlLang[code]}
+            href={new URL(switchPath(Astro.url, code), Astro.site).href}
+          />
+        ))
+    }
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+    <!--
+      Preload da fonte principal (Work Sans, subset latin: cobre inglês e português).
+      Sem isso o texto aparece na fonte do sistema e troca depois de renderizado.
+    -->
+    <link rel="preload" as="font" type="font/woff2" href={workSansLatin} crossorigin />
+    <!--
+      Fonte só do rótulo da troca de idioma: Work Sans 500, subset com os glifos
+      de nomes de idioma (src/assets/pt-label.woff2), embutida como data: URI.
+      Fontes data: são carregadas de forma síncrona, então já estão prontas no
+      primeiro quadro da página nova. Sem isso o texto do rótulo sumia e
+      reaparecia quando o arquivo da fonte chegava.
+    -->
+    <style
+      is:inline
+      set:html={`@font-face{font-family:"PT Label";src:url(${ptLabelFont}) format("woff2");font-weight:500;font-style:normal;font-display:block}`}
+    />
+    <!--
+      1) Lembra o idioma escolhido no seletor (localStorage). Na primeira página
+         aberta da sessão, quem entra por uma URL de outro idioma é levado ao
+         idioma lembrado. Depois disso a URL manda, então voltar no histórico
+         não cria loop.
+      2) Animação de entrada (classe "js"): roda em toda página. Quando a página
+         vem de uma transição (barras), a classe só é ligada quando as barras
+         começam a abrir, para a entrada acontecer na vista do usuário.
+    -->
+    <script is:inline>
+      (function () {
+        var intro = true;
+        // A troca de idioma tem as barras: o dissolve nativo fica de fora nos dois lados
+        function barsFlag() {
+          try { return sessionStorage.getItem("pt-cover"); } catch (_) { return null; }
+        }
+        addEventListener("pageswap", function (e) {
+          if (e.viewTransition && barsFlag()) e.viewTransition.skipTransition();
+        });
+        addEventListener("pagereveal", function (e) {
+          if (e.viewTransition && document.documentElement.dataset.pt) e.viewTransition.skipTransition();
+        });
+        try {
+          document.addEventListener("click", function (e) {
+            var link = e.target.closest && e.target.closest("[data-lang-switch]");
+            if (link) localStorage.setItem("lang", link.getAttribute("hreflang"));
+          });
+
+          if (!sessionStorage.getItem("lang-checked")) {
+            sessionStorage.setItem("lang-checked", "1");
+            var saved = localStorage.getItem("lang");
+            var path = location.pathname;
+            var inPt = /^\/pt(\/|$)/.test(path);
+            var target = null;
+            if (saved === "pt" && !inPt) target = "/pt" + (path === "/" ? "/" : path);
+            if (saved === "en" && inPt) target = path.replace(/^\/pt/, "") || "/";
+            if (target) {
+              location.replace(target + location.search + location.hash);
+              return;
+            }
+          }
+
+          // Veio de uma transição de página: nasce coberto e a animação de entrada
+          // espera as barras abrirem (o PageTransition liga "js" nesse momento)
+          if (sessionStorage.getItem("pt-cover")) {
+            document.documentElement.dataset.pt = "covered";
+            document.documentElement.dataset.ptWait = "";
+            // Texto do véu (idioma de destino), igual ao do overlay da página anterior
+            var saved2 = sessionStorage.getItem("pt-cover");
+            document.documentElement.dataset.ptLabel = saved2 === "1" ? "" : saved2;
+            intro = false;
+          }
+        } catch (_) {}
+        if (intro) document.documentElement.classList.add("js");
+      })();
+    </script>
+  </head>
+  <body>
+    <PageTransition />
+    <slot />
+  </body>
+</html>

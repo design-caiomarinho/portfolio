@@ -1,0 +1,65 @@
+---
+// Tabela "problema → o que foi feito". No mobile cada linha empilha.
+interface Props {
+  heads: [string, string];
+  rows: { problem: string; title: string; text: string }[];
+}
+
+const { heads, rows } = Astro.props;
+---
+
+<div class="table" role="table">
+  <div class="table__row table__row--head" role="row">
+    <p class="case-label" role="columnheader">{heads[0]}</p>
+    <p class="case-label" role="columnheader">{heads[1]}</p>
+  </div>
+  {
+    rows.map((row) => (
+      <div class="table__row" role="row">
+        <p role="cell">{row.problem}</p>
+        <div class="table__built" role="cell">
+          <h3>{row.title}</h3>
+          <p>{row.text}</p>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .table {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-lg);
+  }
+
+  .table__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-inline-md);
+    align-items: start;
+    padding-bottom: var(--space-inset-lg);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .table__built {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-md);
+  }
+
+  @media (max-width: 599.98px) {
+    .table__row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .table__row--head {
+      display: none;
+    }
+
+    /* Sem o cabeçalho, o problema vira o rótulo da linha */
+    .table__row > p {
+      color: var(--content-tertiary);
+    }
+  }
+</style>

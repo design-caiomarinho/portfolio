@@ -1,0 +1,270 @@
+---
+/*
+ * Transição "Blinds" da troca de idioma: barras cobrem a tela em sequência, a
+ * página troca por baixo e as barras se abrem revelando a nova. O rótulo no
+ * meio é o nome do idioma de destino ("Português (PT-BR)" / "English (EN)").
+ * As demais navegações usam o dissolve com blur (global.css).
+ *
+ * Fluxo (site multipágina, então a animação é partida em duas):
+ *  1. Clique: as barras crescem (cover) e só então o navegador troca de página.
+ *  2. Página nova: já nasce coberta (ver Base.astro + html[data-pt="covered"])
+ *     e, quando está pronta, as barras recolhem (reveal).
+ *
+ * Valores medidos no Page Transition Kit (estilo Blinds, direção "up"):
+ * 6 barras, 420ms, defasagem de 56ms, curva cubic-bezier(0.76, 0, 0.24, 1),
+ * rótulo subindo 16px com atraso de 315ms. Para mudar o comportamento, os
+ * números ficam em data-* abaixo.
+ */
+const BARS = 6;
+---
+
+<div
+  class="pt-overlay"
+  aria-hidden="true"
+  data-pt-overlay
+  data-direction="up"
+  data-duration="420"
+  data-stagger="56"
+  data-hold="105"
+  style={`--n: ${BARS}`}
+>
+  {Array.from({ length: BARS }, (_, i) => <span class="pt-bar" style={`--i: ${i}`} />)}
+  <span class="pt-label"></span>
+</div>
+
+<script>
+  const overlay = document.querySelector<HTMLElement>("[data-pt-overlay]");
+
+  if (overlay) {
+    const root = document.documentElement;
+    const bars = Array.from(overlay.querySelectorAll<HTMLElement>(".pt-bar"));
+    const label = overlay.querySelector<HTMLElement>(".pt-label")!;
+
+    const direction = (overlay.dataset.direction ?? "up") as "up" | "down" | "left" | "right";
+    const duration = Number(overlay.dataset.duration);
+    const stagger = Number(overlay.dataset.stagger);
+    const hold = Number(overlay.dataset.hold);
+    const easing = "cubic-bezier(0.76, 0, 0.24, 1)";
+    const labelEasing = "cubic-bezier(0.22, 1, 0.36, 1)";
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+    // up/down: colunas que crescem na vertical; left/right: linhas que crescem na horizontal
+    const horizontal = direction === "left" || direction === "right";
+    const scale = (v: number) => (horizontal ? `scaleX(${v})` : `scaleY(${v})`);
+    overlay.dataset.axis = horizontal ? "x" : "y";
+
+    // Cobrir cresce a partir da borda de onde vem o movimento; revelar recolhe para a borda oposta.
+    const origins = { up: ["bottom", "top"], down: ["top", "bottom"], left: ["right", "left"], right: ["left", "right"] };
+    const [coverOrigin, revealOrigin] = origins[direction];
+    const labelShift = { up: "translateY(16px)", down: "translateY(-16px)", left: "translateX(16px)", right: "translateX(-16px)" }[direction];
+
+    const KEY = "pt-cover";
+    let busy = false;
+
+    function setState(state: "idle" | "covered") {
+      overlay!.classList.toggle("is-covered", state === "covered");
+      overlay!.classList.toggle("is-active", state === "covered");
+    }
+
+    function reset() {
+      overlay!.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+      setState("idle");
+      busy = false;
+    }
+
+    function barAnimation(from: number, to: number, origin: string, base: number) {
+      return bars.map((bar, i) => {
+        bar.style.transformOrigin = origin;
+        return bar.animate([{ transform: scale(from) }, { transform: scale(to) }], {
+          duration,
+          delay: base + i * stagger,
+          easing,
+          fill: "both",
+        });
+      });
+    }
+
+    async function cover() {
+      overlay!.classList.add("is-active");
+      if (reduceMotion.matches) {
+        // Movimento reduzido: um fade curto e suave no lugar das barras
+        overlay!.classList.add("is-covered");
+        label.style.opacity = "1";
+        await overlay!.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, fill: "both" }).finished;
+        return;
+      }
+      const anims = barAnimation(0, 1, coverOrigin, 0);
+      anims.push(
+        label.animate(
+          [{ opacity: 0, transform: labelShift }, { opacity: 1, transform: "none" }],
+          { duration: duration * 0.917, delay: duration * 0.75, easing: labelEasing, fill: "both" },
+        ),
+      );
+      await Promise.all(anims.map((a) => a.finished));
+    }
+
+    // Liga a animação de entrada da página (classe "js", ver Base.astro) e avisa os scripts que esperam
+    function startIntro() {
+      if (!root.hasAttribute("data-pt-wait")) return;
+      root.classList.add("js");
+      root.removeAttribute("data-pt-wait");
+      dispatchEvent(new Event("pt:reveal"));
+    }
+
+    async function reveal() {
+      startIntro();
+      if (reduceMotion.matches) {
+        await overlay!.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: "both" }).finished;
+        return;
+      }
+      // O rótulo fica estável durante o tempo de espera (hold) e some junto com o início da abertura
+      label.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, delay: hold, fill: "both" });
+      const anims = barAnimation(1, 0, revealOrigin, hold);
+      await Promise.all(anims.map((a) => a.finished));
+    }
+
+    // ── Entrada: a página nova já nasceu coberta (html[data-pt="covered"]) ──
+    if (root.dataset.pt === "covered") {
+      // Troca o véu do <html> pelas barras reais no mesmo quadro: sem salto visual
+      setState("covered");
+      delete root.dataset.pt;
+      // O rótulo (idioma de destino) viaja pelo sessionStorage; "1" é o valor sem rótulo.
+      // O véu do <html> já mostra o mesmo texto, na mesma fonte e posição: a troca é invisível.
+      try {
+        const saved = sessionStorage.getItem(KEY);
+        label.textContent = saved && saved !== "1" ? saved : "";
+      } catch {}
+      label.style.opacity = "1";
+
+      const loaded =
+        document.readyState === "complete"
+          ? Promise.resolve()
+          : new Promise((r) => addEventListener("load", r, { once: true }));
+      const ready = Promise.all([document.fonts?.ready, loaded]);
+      // Nunca prende a página: no máximo 1,5s de espera por fontes/imagens
+      Promise.race([ready, new Promise((r) => setTimeout(r, 1500))])
+        .then(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))))
+        .then(reveal)
+        .finally(() => {
+          startIntro(); // garante a entrada mesmo se o reveal falhar
+          try { sessionStorage.removeItem(KEY); } catch {}
+          reset();
+          label.style.opacity = "";
+        });
+    }
+
+    // ── Saída: só o seletor de idioma usa as barras ──
+    // (as demais páginas trocam com o dissolve com blur do global.css)
+    document.addEventListener("click", (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const link = (e.target as Element).closest<HTMLAnchorElement>("a[data-lang-switch]");
+      if (!link || link.target && link.target !== "_self") return;
+
+      const url = new URL(link.href, location.href);
+      // Idioma que já está ativo: link para a própria página segue o comportamento normal
+      if (url.origin !== location.origin || (url.pathname === location.pathname && url.search === location.search)) return;
+
+      e.preventDefault();
+      if (busy) return;
+      busy = true;
+      const name = link.dataset.ptLabel ?? "";
+      label.textContent = name;
+      cover().then(() => {
+        try { sessionStorage.setItem(KEY, name || "1"); } catch {}
+        location.href = url.href;
+      });
+    });
+
+    // Voltar pelo histórico pode restaurar esta página (bfcache) ainda coberta
+    addEventListener("pageshow", (e) => {
+      if (e.persisted) reset();
+    });
+  }
+</script>
+
+<style is:global>
+  /*
+   * Véu do <html>: na página nova, antes de qualquer pintura, o atributo
+   * data-pt="covered" (colocado pelo script do <head>) já pinta a cor das
+   * barras, e o rótulo (data-pt-label). Assim não há flash do conteúdo antes das
+   * barras existirem. O rótulo usa a fonte "PT Label" (display: block, ver
+   * Base.astro): se ainda não carregou fica invisível, nunca na fonte errada.
+   * O script troca o véu pelas barras reais e começa o reveal.
+   */
+  html[data-pt="covered"]::before,
+  html[data-pt="covered"]::after {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+  }
+
+  html[data-pt="covered"]::before {
+    content: "";
+    background: var(--surface-inverse, #030712);
+  }
+
+  html[data-pt="covered"]::after {
+    content: attr(data-pt-label);
+    display: grid;
+    place-items: center;
+    color: var(--surface-default, #f9fafb);
+    font-family: "PT Label", system-ui, sans-serif;
+    font-size: var(--typo-heading-md-size, 24px);
+    font-weight: var(--typo-heading-md-weight, 500);
+    letter-spacing: var(--typo-heading-md-letter-spacing, normal);
+  }
+
+  .pt-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* Durante a animação a camada bloqueia cliques (evita navegar duas vezes) */
+  .pt-overlay.is-active {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .pt-bar {
+    position: absolute;
+    background: var(--surface-inverse);
+    transform: scale(0);
+  }
+
+  /* up/down: colunas lado a lado. +1px de sobreposição evita fresta entre as barras. */
+  .pt-overlay[data-axis="y"] .pt-bar {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--i) * 100% / var(--n));
+    width: calc(100% / var(--n) + 1px);
+  }
+
+  /* left/right: linhas empilhadas */
+  .pt-overlay[data-axis="x"] .pt-bar {
+    left: 0;
+    right: 0;
+    top: calc(var(--i) * 100% / var(--n));
+    height: calc(100% / var(--n) + 1px);
+  }
+
+  /* Estado "coberto" estático (ponto de partida do reveal e do fade com movimento reduzido) */
+  .pt-overlay.is-covered .pt-bar {
+    transform: none;
+  }
+
+  .pt-label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--surface-default);
+    font-family: "PT Label", system-ui, sans-serif;
+    font-size: var(--typo-heading-md-size);
+    font-weight: var(--typo-heading-md-weight);
+    letter-spacing: var(--typo-heading-md-letter-spacing);
+    opacity: 0;
+  }
+</style>
