@@ -4,16 +4,38 @@ interface Props {
   label: string;
   title: string;
   text: string;
+  // Lista em tópicos abaixo do texto. "destaque: descrição" põe o destaque em negrito
+  items?: string[];
+  // Parágrafo de fechamento, depois da lista
+  after?: string;
+  // Última etapa do Processo: sem o filete de baixo
+  final?: boolean;
 }
 
-const { label, title, text } = Astro.props;
+const { label, title, text, items, after, final } = Astro.props;
 ---
 
-<div class="step">
+<div class:list={["step", { "step--final": final }]}>
   <p class="case-label">{label}</p>
   <div class="step__body">
     <h3>{title}</h3>
     <p>{text}</p>
+    {
+      items && (
+        <ul class="step__list">
+          {items.map((item) => {
+            const [lead, ...rest] = item.split(": ");
+            return (
+              <li>
+                <strong>{lead}</strong>
+                {rest.length > 0 && `: ${rest.join(": ")}`}
+              </li>
+            );
+          })}
+        </ul>
+      )
+    }
+    {after && <p>{after}</p>}
   </div>
 </div>
 
@@ -27,17 +49,45 @@ const { label, title, text } = Astro.props;
     border-bottom: 1px solid var(--border-default);
   }
 
+  .step--final {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
   .step__body {
     display: flex;
-    flex: none;
+    /* Parte de 500px e encolhe quando a coluna não comporta rótulo + texto */
+    flex: 0 1 500px;
     flex-direction: column;
     gap: var(--space-stack-md);
-    width: min(500px, 100%);
+    min-width: 0;
+  }
+
+  .step > .case-label {
+    flex: none;
+  }
+
+  .step__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    margin: 0;
+    padding-left: var(--spacing-24);
+  }
+
+  .step__list strong {
+    font-weight: var(--typo-body-md-semibold-weight);
   }
 
   @media (max-width: 599.98px) {
     .step {
       flex-direction: column;
+    }
+
+    /* Empilhado, a base de 500px viraria altura */
+    .step__body {
+      flex-basis: auto;
+      width: 100%;
     }
   }
 </style>

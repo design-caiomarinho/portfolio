@@ -4,7 +4,7 @@ import { getLang, localizedPath, switchPath, useUI, type Lang } from "../i18n";
 // Páginas de case passam `project`: a navbar troca a marca e o menu central
 // pelo "voltar + Projeto / Tipo, ano". O seletor de idioma é o mesmo.
 interface Props {
-  project?: { title: string; meta: string; backHref?: string };
+  project?: { title: string; meta: string; backHref?: string; backLabel?: string };
   // Item do menu em destaque (padrão: Projetos, a home)
   current?: "projects" | "about";
 }
@@ -36,7 +36,7 @@ const languages: { code: Lang; label: string; name: string; href: string }[] = [
     {
       project ? (
         <div class="header__project">
-          <a class="header__back" href={project.backHref ?? localizedPath(lang)} aria-label={t.back}>
+          <a class="header__back" href={project.backHref ?? localizedPath(lang)} aria-label={project.backLabel ?? t.back}>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path
                 d="M7 3L2 8L7 13M2 8H14"
@@ -171,16 +171,11 @@ const languages: { code: Lang; label: string; name: string; href: string }[] = [
     height: 56px;
   }
 
-  /*
-   * Páginas de case: a barra acompanha o scroll (sticky, no fluxo, sem pular o
-   * conteúdo) e tem o fundo da página (surface), para o texto que rola por trás
-   * não atrapalhar a leitura dela, no mobile e no desktop.
-   */
+  /* Páginas de case: a barra fica fixa no topo durante o scroll, sem fundo */
   .header--project {
     position: sticky;
     top: 0;
     z-index: 30;
-    background: var(--surface-default);
   }
 
   /* Âncoras do índice não ficam escondidas atrás da barra fixa */

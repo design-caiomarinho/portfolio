@@ -2,7 +2,7 @@
 // Tabela "problema → o que foi feito". No mobile cada linha empilha.
 interface Props {
   heads: [string, string];
-  rows: { problem: string; title: string; text: string }[];
+  rows: { problem: string; title?: string; text: string }[];
 }
 
 const { heads, rows } = Astro.props;
@@ -18,7 +18,7 @@ const { heads, rows } = Astro.props;
       <div class="table__row" role="row">
         <p role="cell">{row.problem}</p>
         <div class="table__built" role="cell">
-          <h3>{row.title}</h3>
+          {row.title && <h3>{row.title}</h3>}
           <p>{row.text}</p>
         </div>
       </div>

@@ -1,0 +1,66 @@
+---
+/*
+ * Espaço reservado para uma imagem do case. Enquanto não há `src`, mostra uma
+ * caixa cinza na proporção final, com o rótulo no centro. Ao passar `src`, a
+ * mesma chamada vira a imagem de verdade (com a legenda como texto alternativo).
+ */
+interface Props {
+  label: string;
+  caption?: string;
+  /** Texto alternativo quando não há legenda. */
+  alt?: string;
+  /** Proporção largura/altura do placeholder, ex.: "16 / 10". */
+  ratio: string;
+  src?: string;
+}
+
+const { label, caption, ratio, src, alt = caption } = Astro.props;
+---
+
+<figure class="slot">
+  {
+    src ? (
+      <img class="slot__img" src={src} alt={alt} loading="lazy" decoding="async" />
+    ) : (
+      <div class="slot__box" style={`aspect-ratio: ${ratio}`} role="img" aria-label={alt}>
+        <span class="case-label" aria-hidden="true">
+          {label}
+        </span>
+      </div>
+    )
+  }
+  {caption && <figcaption class="case-caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .slot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-sm);
+    margin: 0;
+  }
+
+  .slot__box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: var(--space-inset-lg);
+    text-align: center;
+    /* Mesmo cinza do placeholder de projeto na home */
+    background: #dedede;
+    border-radius: var(--radius-md);
+  }
+
+  .slot__box span {
+    color: var(--content-secondary);
+  }
+
+  .slot__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+  }
+</style>

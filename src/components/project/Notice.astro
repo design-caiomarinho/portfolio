@@ -2,15 +2,20 @@
 // Aviso de leitura com atalhos para as seções principais.
 interface Props {
   text: string;
+  /** Observação curta abaixo do texto principal. */
+  note?: string;
   hint: string;
   links: { label: string; href: string }[];
 }
 
-const { text, hint, links } = Astro.props;
+const { text, note, hint, links } = Astro.props;
 ---
 
 <aside class="notice">
-  <p class="notice__text">{text}</p>
+  <div class="notice__body">
+    <p class="notice__text">{text}</p>
+    {note && <p class="notice__text">{note}</p>}
+  </div>
   <div class="notice__shortcuts">
     <p class="notice__hint">{hint}</p>
     <nav class="notice__links" aria-label={hint}>
@@ -28,6 +33,12 @@ const { text, hint, links } = Astro.props;
     background: var(--surface-accent-soft);
     border: 1px solid var(--border-accent-soft);
     border-radius: var(--radius-md);
+  }
+
+  .notice__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
   }
 
   .notice__text {

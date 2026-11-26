@@ -213,7 +213,7 @@ const [noticeUi, noticeSolution, noticeOutcome] = c.hero.notice.links;
     <h2>{c.process.title}</h2>
 
     <div class="steps">
-      {c.process.steps.map((step) => <Step {...step} />)}
+      {c.process.steps.map((step, i) => <Step {...step} final={i === c.process.steps.length - 1} />)}
     </div>
 
     <div class="case-block">

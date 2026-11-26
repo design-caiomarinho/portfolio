@@ -12,7 +12,7 @@ export const contact = {
 };
 
 const en = {
-  title: "About — Caio Marinho",
+  title: "About - Caio Marinho",
   description: "Caio Marinho is an end-to-end Product Designer with a soft spot for complicated products.",
   hero: {
     title: "I design the logic behind the screen",
@@ -47,7 +47,7 @@ const en = {
 };
 
 const pt: typeof en = {
-  title: "Sobre — Caio Marinho",
+  title: "Sobre - Caio Marinho",
   description:
     "Caio Marinho é Product Designer end-to-end, com um fraco por produtos complicados.",
   hero: {

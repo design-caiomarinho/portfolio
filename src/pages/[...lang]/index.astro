@@ -4,7 +4,8 @@ import Header from "../../components/Header.astro";
 import Hero from "../../components/Hero.astro";
 import ProjectPreview from "../../components/ProjectPreview.astro";
 import Footer from "../../components/Footer.astro";
-import { getLang, langPaths, localizedPath, useUI } from "../../i18n";
+import { getLang, langPaths, localizedPath } from "../../i18n";
+import { prysmo } from "../../i18n/prysmo";
 
 // Gera "/" (en) e "/pt/" (pt) a partir deste único arquivo
 export const getStaticPaths = langPaths;
@@ -25,8 +26,12 @@ const lang = getLang(Astro.url);
         eager
         href={localizedPath(lang, "/projects/praieros")}
       />
-      <!-- Placeholder do próximo case: sem link nem meta até ter nome (basta passar title/meta/href) -->
-      <ProjectPreview title={useUI(lang).project.next} />
+      <!-- Sem thumb por enquanto: fica o bloco cinza (passe `image` quando houver) -->
+      <ProjectPreview
+        title="Prysmo"
+        meta={prysmo(lang)("case.meta")}
+        href={localizedPath(lang, "/projects/prysmo")}
+      />
     </div>
   </main>
   <Footer />

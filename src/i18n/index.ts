@@ -29,7 +29,7 @@ const ui = {
       back: "Back to projects",
     },
     hero: {
-      title: ["Beautiful design is easy.", "Hard is solving problems without making new ones."],
+      title: ["Beautiful design is easy.", "Hard is solving problems without making new ones"],
       // true: o bloco encolhe até a maior linha do título, aproximando a nota digitada
       fit: true,
       // A nota é "digitada" com um erro proposital: before + wrong, apaga wrong, digita after.
@@ -61,7 +61,7 @@ const ui = {
       back: "Voltar aos projetos",
     },
     hero: {
-      title: ["Design bonito é fácil.", "O difícil é resolver problemas sem criar novos."],
+      title: ["Design bonito é fácil.", "O difícil é resolver problemas sem criar novos"],
       fit: true,
       note: { before: " Eu faço os do", wrong: "si", after: "is." },
     },

@@ -6,7 +6,7 @@ import type { Lang } from "./index";
  * Ids de seção (overview, context…) ficam fixos: são âncoras, não texto.
  */
 const en = {
-  title: "Praieros — Caio Marinho",
+  title: "Praieros - Caio Marinho",
   description:
     "Case: Praieros, a web app that makes the water quality of Salvador's beaches readable in seconds.",
   meta: "Web App, 2026",
@@ -55,7 +55,7 @@ const en = {
       "There is also an official app, Vai Dar Praia. It makes finding a beach easier, but in the screens I reviewed, the status comes without a date.",
     ],
     statement:
-      "The information is out there. But if you are not an expert, it is hard to reach and even harder to understand.",
+      "The information is out there. But if you are not an expert, it is hard to reach and even harder to understand",
   },
   problem: {
     title: "Some people never find the bulletin. Those who do can misread it",
@@ -85,12 +85,12 @@ const en = {
     cardsCaption: "Partial: few sources. Supported: many sources that agree.",
     quoteLabel: "The problem, in one sentence",
     quote:
-      "People who decide to go to a beach in Salvador need to know, before leaving home, if the point they plan to visit is good and how recent that information is. Without it, they go without knowing what they should, or give up a beach because of a label they misunderstood.",
+      "People who decide to go to a beach in Salvador need to know, before leaving home, if the point they plan to visit is good and how recent that information is. Without it, they go without knowing what they should, or give up a beach because of a label they misunderstood",
     closing:
       "I do not know how many people this affects. The impact is not measured, and a few beliefs that started from my own experience stay labeled as assumptions.",
   },
   solution: {
-    title: "One page per beach. The answer first, its limits beside it.",
+    title: "One page per beach. The answer first, its limits beside it",
     text: "Praieros is a web app. It opens on a map, and each beach has its own page with the status, the point it refers to, the date of the bulletin and where the data comes from.",
     pageAlt:
       "A Praieros beach page: status, collection point, bulletin date, rain warning and source in one panel",
@@ -134,7 +134,7 @@ const en = {
     live: "Try it live",
   },
   process: {
-    title: "Four steps, and six rules that decided what stayed.",
+    title: "Four steps, and six rules that decided what stayed",
     steps: [
       {
         label: "01 / Discovery",
@@ -203,7 +203,7 @@ const en = {
       "Who does the bulletin not reach, beyond visitors and crowded beaches?",
     ],
     takeawayLabel: "What I take from this",
-    takeaway: "A good designer solves the problem, and prepares for the next ones.",
+    takeaway: "A good designer solves the problem, and prepares for the next ones",
     closing:
       "The bulletin has no collection date, and I could not fix that. So the page says it. The same attitude guides what comes next: name what is unknown, then research it.",
     open: "Open Praieros",
@@ -213,7 +213,7 @@ const en = {
 export type PraierosCopy = typeof en;
 
 const pt: PraierosCopy = {
-  title: "Praieros — Caio Marinho",
+  title: "Praieros - Caio Marinho",
   description:
     "Case: Praieros, um web app que torna a qualidade da água das praias de Salvador legível em segundos.",
   meta: "Web App, 2026",
@@ -261,7 +261,7 @@ const pt: PraierosCopy = {
       "Existe também um app oficial, o Vai Dar Praia. Ele facilita encontrar uma praia, mas, nas telas que analisei, o status vem sem data.",
     ],
     statement:
-      "A informação está lá. Mas, se você não é especialista, ela é difícil de alcançar e ainda mais difícil de entender.",
+      "A informação está lá. Mas, se você não é especialista, ela é difícil de alcançar e ainda mais difícil de entender",
   },
   problem: {
     title: "Algumas pessoas nunca encontram o boletim. Quem encontra pode interpretá-lo mal",
@@ -291,12 +291,12 @@ const pt: PraierosCopy = {
     cardsCaption: "Parcial: poucas fontes. Confirmado: muitas fontes que concordam.",
     quoteLabel: "O problema, em uma frase",
     quote:
-      "Quem decide ir a uma praia em Salvador precisa saber, antes de sair de casa, se o ponto que pretende visitar está bom e quão recente é essa informação. Sem isso, a pessoa vai sem saber o que deveria, ou desiste de uma praia por causa de um rótulo que entendeu mal.",
+      "Quem decide ir a uma praia em Salvador precisa saber, antes de sair de casa, se o ponto que pretende visitar está bom e quão recente é essa informação. Sem isso, a pessoa vai sem saber o que deveria, ou desiste de uma praia por causa de um rótulo que entendeu mal",
     closing:
       "Não sei quantas pessoas isso afeta. O impacto não foi medido, e algumas crenças que nasceram da minha própria experiência continuam marcadas como suposições.",
   },
   solution: {
-    title: "Uma página por praia. A resposta primeiro, seus limites ao lado.",
+    title: "Uma página por praia. A resposta primeiro, seus limites ao lado",
     text: "O Praieros é um web app. Ele abre em um mapa, e cada praia tem sua própria página com o status, o ponto a que se refere, a data do boletim e a origem dos dados.",
     pageAlt:
       "Uma página de praia do Praieros: status, ponto de coleta, data do boletim, aviso de chuva e fonte em um só painel",
@@ -341,7 +341,7 @@ const pt: PraierosCopy = {
     live: "Experimente ao vivo",
   },
   process: {
-    title: "Quatro etapas e seis regras que decidiram o que ficou.",
+    title: "Quatro etapas e seis regras que decidiram o que ficou",
     steps: [
       {
         label: "01 / Descoberta",
@@ -410,7 +410,7 @@ const pt: PraierosCopy = {
       "Quem o boletim não alcança, além de visitantes e praias lotadas?",
     ],
     takeawayLabel: "O que levo disso",
-    takeaway: "Um bom designer resolve o problema e se prepara para os próximos.",
+    takeaway: "Um bom designer resolve o problema e se prepara para os próximos",
     closing:
       "O boletim não tem data de coleta, e eu não pude corrigir isso. Então a página diz. A mesma atitude guia o que vem a seguir: nomear o que não se sabe e então pesquisar.",
     open: "Abrir o Praieros",

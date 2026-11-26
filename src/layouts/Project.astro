@@ -12,7 +12,7 @@ import { getLang, useUI } from "../i18n";
 interface Props {
   title: string;
   description?: string;
-  project: { title: string; meta: string };
+  project: { title: string; meta: string; backLabel?: string };
   sections: { id: string; label: string }[];
 }
 

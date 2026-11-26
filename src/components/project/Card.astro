@@ -3,18 +3,20 @@ import { getLang, useUI } from "../../i18n";
 
 // Card de destaque. Com `sources`, vira card de evidência (pontinhos + contagem).
 interface Props {
-  label: string;
+  label?: string;
   title: string;
   text: string;
   sources?: number;
+  // Título no tamanho do corpo e conteúdo alinhado ao topo
+  compact?: boolean;
 }
 
-const { label, title, text, sources } = Astro.props;
+const { label, title, text, sources, compact } = Astro.props;
 const t = useUI(getLang(Astro.url)).project;
 ---
 
-<article class:list={["card", { "card--evidence": sources }]}>
-  <p class="card__label">{label}</p>
+<article class:list={["card", { "card--evidence": sources, "card--compact": compact }]}>
+  {label && <p class="card__label">{label}</p>}
   <div class="card__body">
     <h3>{title}</h3>
     <p class="card__text">{text}</p>
@@ -48,6 +50,23 @@ const t = useUI(getLang(Astro.url)).project;
 
   .card--evidence {
     gap: var(--space-stack-xl);
+  }
+
+  .card--compact {
+    justify-content: flex-start;
+    gap: var(--space-stack-xs);
+  }
+
+  .card--compact .card__body {
+    gap: var(--space-stack-xs);
+  }
+
+  .card--compact h3 {
+    font-family: var(--typo-body-md-semibold-family);
+    font-size: var(--typo-body-md-semibold-size);
+    font-weight: var(--typo-body-md-semibold-weight);
+    line-height: var(--typo-body-md-semibold-line-height);
+    letter-spacing: var(--typo-body-md-semibold-letter-spacing);
   }
 
   .card__label {
