@@ -1,0 +1,395 @@
+---
+import Project from "../../../layouts/Project.astro";
+import Section from "../../../components/project/Section.astro";
+import ImageSlot from "../../../components/project/ImageSlot.astro";
+import Meta from "../../../components/project/Meta.astro";
+import Notice from "../../../components/project/Notice.astro";
+import Card from "../../../components/project/Card.astro";
+import BeforeAfter from "../../../components/project/BeforeAfter.astro";
+import Step from "../../../components/project/Step.astro";
+import OutcomeTable from "../../../components/project/OutcomeTable.astro";
+import { getLang, langPaths } from "../../../i18n";
+import { prysmo, type PrysmoKey } from "../../../i18n/prysmo";
+
+// Gera /projects/prysmo (en) e /pt/projects/prysmo (pt) a partir deste arquivo
+export const getStaticPaths = langPaths;
+
+// Todo o texto vem de src/i18n/prysmo.ts
+const t = prysmo(getLang(Astro.url));
+
+/*
+ * IMAGENS: coloque os PNG em public/projects/prysmo/ e informe o caminho aqui,
+ * ex.: "context": "/projects/prysmo/three-teams.png". Sem caminho, fica o placeholder.
+ */
+const images: Record<string, string | undefined> = {
+  "hero": "/projects/prysmo/hero.webp",
+  "problem": "/projects/prysmo/flow-map.webp",
+  "list": "/projects/prysmo/screen-list.webp",
+  "open-note": "/projects/prysmo/screen-open-note.webp",
+  "select": "/projects/prysmo/screen-select.webp",
+  "mark": "/projects/prysmo/screen-mark.webp",
+  "marked": "/projects/prysmo/screen-marked.webp",
+  "trail": "/projects/prysmo/screen-trail.webp",
+  "affinity": "/projects/prysmo/affinity-map.webp",
+  "interface-lens": "/projects/prysmo/interface-lens.webp",
+  "impact-effort": "/projects/prysmo/impact-effort.webp",
+};
+
+// Galeria na ordem de uso, uma linha por item; linha com duas telas vira grid de 2.
+// O "frame" é o nome da tela no Figma
+const wide = "2000 / 1273";
+const tall = "1253 / 1595";
+const highlights = [
+  [{ key: "list", frame: "Pendentes / Desktop", ratio: wide, alt: t("highlights.list.alt") }],
+  [{ key: "open-note", frame: "Nota aberta / Desktop", ratio: wide, alt: t("highlights.open-note.alt") }],
+  [
+    { key: "select", frame: "Trecho selecionado / Desktop", ratio: tall, alt: t("highlights.select.alt") },
+    { key: "mark", frame: "Marcar trecho / Desktop", ratio: tall, alt: t("highlights.mark.alt") },
+  ],
+  [{ key: "marked", frame: "Notas marcadas / Desktop", ratio: wide, alt: t("highlights.marked.alt") }],
+  [{ key: "trail", frame: "Trilha da marcação / Desktop", ratio: wide, alt: t("highlights.trail.alt") }],
+] as const;
+
+// Os ids são âncoras fixas; só o rótulo muda com o idioma
+const sections = (
+  ["intro", "context", "problem", "solution", "process", "highlights", "outcome"] as const
+).map((id) => ({ id, label: t(`${id}.title`) }));
+
+const label = (id: string) => sections.find((s) => s.id === id)!.label;
+
+// "Role: Product Designer, UX Researcher" → rótulo "Role" + valor
+const metaItem = (key: PrysmoKey) => {
+  const [head, ...rest] = t(key).split(": ");
+  // Uma função por linha, como no case Praieros
+  return { label: head, lines: rest.join(": ").split(/(?<=Designer,) /) };
+};
+---
+
+<Project
+  title="Prysmo - Caio Marinho"
+  description={t("case.support")}
+  project={{ title: "Prysmo", meta: t("case.meta"), backLabel: t("case.back") }}
+  sections={sections}
+>
+  <!-- Abertura -->
+  <header class="hero">
+    <h1>{t("case.title")}</h1>
+
+    <div class="hero__media">
+      <ImageSlot eager label="Hero" alt={t("case.hero-alt")} ratio="2560 / 1630" src={images["hero"]} />
+
+      <Meta
+        items={[
+          metaItem("case.meta-role"),
+          metaItem("case.meta-timeline"),
+          {
+            label: t("case.meta-type-label"),
+            lines: [t("case.meta-type"), t("case.meta-type-2"), t("case.meta-type-3")],
+          },
+        ]}
+      />
+    </div>
+
+    <Notice
+      text={t("case.note-text")}
+      note={t("case.note-images")}
+      hint={t("case.note-shortcuts-label")}
+      links={[
+        { label: t("case.shortcut-highlights"), href: "#highlights" },
+        { label: t("case.shortcut-solution"), href: "#solution" },
+        { label: t("case.shortcut-outcome"), href: "#outcome" },
+      ]}
+    />
+  </header>
+
+  <Section id="intro" label={label("intro")}>
+    <div class="case-block">
+      <h2>{t("intro.lead1")}</h2>
+      <p>{t("intro.text1")}</p>
+      <p>{t("intro.text2")}</p>
+    </div>
+  </Section>
+
+  <Section id="context" label={label("context")}>
+    <div class="case-block">
+      <p>{t("context.text1")}</p>
+      <p>{t("context.text2")}</p>
+    </div>
+
+    <div class="case-cards cards--three">
+      {
+        ([1, 2, 3] as const).map((n) => (
+          <Card
+            label={`${t("context.step")} ${n}`}
+            title={t(`context.team${n}.name`)}
+            text={t(`context.team${n}.text`)}
+          />
+        ))
+      }
+    </div>
+
+    <p>{t("context.text3")}</p>
+
+    <BeforeAfter
+      before={{ src: "/projects/prysmo/notes-before.webp", alt: t("context.compare-before-alt") }}
+      after={{ src: "/projects/prysmo/notes-after.webp", alt: t("context.compare-after-alt") }}
+      valueText={t("context.compare-value")}
+      width={2000}
+      height={1273}
+      controlLabel={t("context.compare-control")}
+      caption={t("context.caption1")}
+    />
+  </Section>
+
+  <Section id="problem" label={label("problem")}>
+    <div class="case-block">
+      <h2>{t("problem.lead1")}</h2>
+      <p>{t("problem.text1")}</p>
+    </div>
+
+    <div class="case-cards cards--two">
+      {
+        ([1, 2, 3, 4] as const).map((n) => (
+          <Card
+            label={t(`problem.card${n}.label`)}
+            title={t(`problem.card${n}.title`)}
+            text={t(`problem.card${n}.text`)}
+          />
+        ))
+      }
+    </div>
+
+    <ImageSlot
+      label={t("problem.image-slot1")}
+      caption={t("problem.caption1")}
+      alt={t("problem.alt1")}
+      ratio="2.1 / 1"
+      src={images["problem"]}
+    />
+
+    <blockquote class="case-quote">
+      <p class="case-label">{t("problem.text2")}</p>
+      <p class="case-quote__text">{t("problem.text3")}</p>
+    </blockquote>
+  </Section>
+
+  <Section id="solution" label={label("solution")} gap="2xl">
+    <div class="case-block">
+      <h2>{t("solution.lead1")}</h2>
+      <p>{t("solution.text1")}</p>
+    </div>
+
+    <div class="steps steps--balanced">
+      {
+        ([1, 2, 3] as const).map((n) => (
+          <Step
+            label={t(`solution.d${n}.label`)}
+            title={t(`solution.d${n}.title`)}
+            text={t(`solution.d${n}.text`)}
+          />
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section id="process" label={label("process")} gap="2xl">
+    <h2>{t("process.lead1")}</h2>
+
+    <div class="steps steps--media">
+      <Step
+        label={t("process.step1.label")}
+        title={t("process.item1")}
+        text={t("process.item2")}
+      />
+      <Step
+        label={t("process.step2.label")}
+        title={t("process.item3")}
+        text={t("process.item4")}
+      />
+      <Step
+        label={t("process.step3.label")}
+        title={t("process.item5")}
+        text={t("process.item6")}
+      >
+        <ImageSlot
+          label={t("process.image-slot1")}
+          caption={t("process.caption1")}
+          alt={t("process.alt1")}
+          ratio="1731 / 2000"
+          src={images["affinity"]}
+        />
+      </Step>
+      <Step
+        label={t("process.step4.label")}
+        title={t("process.item7")}
+        text={t("process.item8")}
+      />
+      <Step
+        label={t("process.step5.label")}
+        title={t("process.item9")}
+        text={t("process.item10")}
+      >
+        <ImageSlot
+          label={t("process.image-slot2")}
+          caption={t("process.caption2")}
+          alt={t("process.alt2")}
+          ratio="1731 / 2000"
+          src={images["interface-lens"]}
+        />
+      </Step>
+      <Step
+        label={t("process.step6.label")}
+        title={t("process.item11")}
+        text={t("process.item12")}
+      >
+        <ImageSlot
+          label={t("process.image-slot3")}
+          caption={t("process.caption3")}
+          alt={t("process.alt3")}
+          ratio="1725 / 2000"
+          src={images["impact-effort"]}
+        />
+      </Step>
+      <Step
+        label={t("process.step7.label")}
+        title={t("process.item13")}
+        text={t("process.item14")}
+      />
+      <Step
+        final
+        label={t("process.step8.label")}
+        title={t("process.item15")}
+        text={t("process.item16")}
+      />
+    </div>
+  </Section>
+
+  <Section id="highlights" label={label("highlights")}>
+    <div class="case-group">
+      <div class="case-block">
+        <h2>{t("highlights.intro1")}</h2>
+        <p>{t("highlights.intro2")}</p>
+      </div>
+
+      <div class="case-figures gallery">
+        {
+          highlights.map((row) => {
+            const shots = row.map((shot) => (
+              <ImageSlot
+                label={shot.frame}
+                caption={t(`highlights.${shot.key}.caption`)}
+                alt={shot.alt}
+                ratio={shot.ratio}
+                src={images[shot.key]}
+              />
+            ));
+            return row.length > 1 ? <div class="figure-pair">{shots}</div> : shots;
+          })
+        }
+      </div>
+    </div>
+  </Section>
+
+  <Section id="outcome" label={label("outcome")} gap="2xl">
+    <div class="case-block">
+      <h2>{t("outcome.lead1")}</h2>
+      <p>{t("outcome.text1")}</p>
+    </div>
+
+    <OutcomeTable
+      heads={[t("outcome.text2"), t("outcome.text3")]}
+      rows={[
+        { problem: t("outcome.item1"), text: t("outcome.item2") },
+        { problem: t("outcome.item3"), text: t("outcome.item4") },
+        { problem: t("outcome.item5"), text: t("outcome.item6") },
+      ]}
+    />
+
+    <div class="case-note">
+      <p class="case-label">{t("outcome.text4")}</p>
+      <ul class="next">
+        <li>{t("outcome.item7")}</li>
+        <li>{t("outcome.item8")}</li>
+        <li>{t("outcome.item9")}</li>
+      </ul>
+      <span class="rule rule--bottom" data-rule aria-hidden="true"></span>
+    </div>
+
+    <blockquote class="case-quote">
+      <p class="case-label">{t("outcome.text5")}</p>
+      <p class="case-quote__text">{t("outcome.text6")}</p>
+    </blockquote>
+  </Section>
+</Project>
+
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-3xl);
+  }
+
+  .hero__media {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xl);
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-20);
+  }
+
+  /* Desktop: os três títulos das decisões em duas linhas equilibradas */
+  @media (min-width: 600px) {
+    .steps--balanced :global(h3) {
+      max-width: 22ch;
+      text-wrap: balance;
+    }
+  }
+
+  /* Quatro cards: 2 × 2 (em vez de 3 + 1 sozinho), todos do mesmo tamanho */
+  .cards--two {
+    grid-auto-rows: 1fr;
+  }
+
+  @media (min-width: 600px) {
+    .cards--two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Duas imagens lado a lado; no celular, uma embaixo da outra */
+  .figure-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-stack-lg);
+  }
+
+  @media (min-width: 600px) {
+    .figure-pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-stack-md);
+    }
+  }
+
+  /* Cada tela tem legenda própria: um respiro maior separa uma da outra */
+  .gallery {
+    gap: var(--space-stack-2xl);
+  }
+
+  /* No celular, o par empilhado mantém o mesmo respiro da galeria */
+  .gallery .figure-pair {
+    row-gap: var(--space-stack-2xl);
+  }
+
+  .next {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-stack-xs);
+    margin: 0;
+    padding-left: var(--spacing-24);
+  }
+</style>

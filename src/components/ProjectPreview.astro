@@ -46,7 +46,7 @@ const Tag = href ? "a" : "div";
 
     <!-- Sem `image`, fica o bloco cinza de placeholder -->
     <div
-      class="project__media"
+      class:list={["project__media", { "project__media--image": image }]}
       role="img"
       aria-label={t.preview(title)}
       data-reveal-scroll
@@ -130,6 +130,11 @@ const Tag = href ? "a" : "div";
     /* Cor fixa do placeholder no Figma (#dedede), ainda sem token */
     background: #dedede;
     overflow: hidden;
+  }
+
+  /* Mesma borda das imagens dos cases; no quadro, para não ampliar no hover */
+  .project__media--image {
+    border: 1px solid var(--border-default);
   }
 
   .project__img {

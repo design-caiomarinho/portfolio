@@ -111,5 +111,31 @@ const { title, description = useUI(lang).site.description } = Astro.props;
   <body>
     <PageTransition />
     <slot />
+    <script>
+      // Filetes: cada um se desenha quando ele próprio aparece na tela (num bloco
+      // alto, o de baixo só entra depois). Se o bloco ainda está subindo, o
+      // traço espera o atraso que falta e começa logo depois dele.
+      const drawer = new IntersectionObserver((entries) => {
+        const entering = entries.filter((e) => e.isIntersecting);
+        if (!entering.length) return;
+        // Um quadro depois, para os observadores dos blocos já terem rodado
+        requestAnimationFrame(() =>
+          entering.forEach((entry, i) => {
+            const rule = entry.target as HTMLElement;
+            const block = rule.closest("[data-reveal-scroll], [data-reveal]");
+            const reveal = block
+              ?.getAnimations()
+              .find((a) => a instanceof CSSAnimation && a.animationName === "reveal");
+            const wait = reveal
+              ? Math.max(0, (reveal.effect?.getTiming().delay ?? 0) - Number(reveal.currentTime ?? 0))
+              : 0;
+            rule.style.setProperty("--rule-delay", `${wait / 1000 + 0.2 + i * 0.1}s`);
+            rule.setAttribute("data-drawn", "");
+          }),
+        );
+        entering.forEach((entry) => drawer.unobserve(entry.target));
+      });
+      document.querySelectorAll("[data-rule]").forEach((rule) => drawer.observe(rule));
+    </script>
   </body>
 </html>

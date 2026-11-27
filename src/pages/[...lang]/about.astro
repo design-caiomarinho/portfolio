@@ -79,6 +79,7 @@ const links = [
                   <p class="experience__company">{item.company}</p>
                   <p class="experience__role">{item.role}</p>
                 </div>
+                <span class="rule rule--bottom" data-rule aria-hidden="true"></span>
               </li>
             ))
           }
@@ -274,7 +275,7 @@ const links = [
     justify-content: space-between;
     gap: var(--space-gap-md);
     padding-bottom: var(--space-inset-lg);
-    border-bottom: 1px solid var(--border-default);
+    position: relative;
   }
 
   .experience__period {

@@ -123,6 +123,77 @@ const BARS = 6;
       await Promise.all(anims.map((a) => a.finished));
     }
 
+    /*
+     * A troca de idioma mantém o ponto da leitura. Os textos têm tamanhos
+     * diferentes em cada idioma, então guardar só os pixels erraria o lugar: o
+     * que se guarda é o bloco que está na linha de leitura (30% da altura da
+     * tela) e quanto dele já passou. As duas versões têm a mesma estrutura.
+     */
+    const SCROLL_KEY = "pt-scroll";
+    const ANCHORS = "main :is(h1, h2, h3, p, li, figure, article), body > footer";
+    const READING_LINE = 0.3;
+
+    // Topo no layout, sem o deslocamento das animações de entrada (transform)
+    function layoutTop(el: HTMLElement) {
+      let top = 0;
+      for (let node: HTMLElement | null = el; node; node = node.offsetParent as HTMLElement | null) {
+        top += node.offsetTop;
+      }
+      return top;
+    }
+
+    function savePosition(path: string) {
+      try {
+        sessionStorage.removeItem(SCROLL_KEY);
+        if (scrollY <= 0) return; // no topo, continua no topo
+        const line = scrollY + innerHeight * READING_LINE;
+        const anchors = Array.from(document.querySelectorAll<HTMLElement>(ANCHORS));
+        const index = anchors.findIndex((el) => el.offsetHeight > 0 && layoutTop(el) + el.offsetHeight > line);
+        if (index < 0) return;
+        const el = anchors[index];
+        // Negativo quando a linha cai no respiro antes do bloco: aí vale a distância em pixels
+        const gap = line - layoutTop(el);
+        const position = { path, index, gap: Math.min(gap, 0), ratio: Math.max(gap, 0) / el.offsetHeight };
+        sessionStorage.setItem(SCROLL_KEY, JSON.stringify(position));
+      } catch {}
+    }
+
+    function restorePosition() {
+      let saved: { path: string; index: number; gap: number; ratio: number };
+      try {
+        const raw = sessionStorage.getItem(SCROLL_KEY);
+        if (!raw) return;
+        sessionStorage.removeItem(SCROLL_KEY);
+        saved = JSON.parse(raw);
+      } catch {
+        return;
+      }
+      if (saved.path !== location.pathname) return;
+      const el = document.querySelectorAll<HTMLElement>(ANCHORS)[saved.index];
+      if (!el) return;
+
+      const apply = () =>
+        scrollTo({
+          top: layoutTop(el) + saved.gap + saved.ratio * el.offsetHeight - innerHeight * READING_LINE,
+          behavior: "instant",
+        });
+      apply();
+
+      // Fontes e imagens que chegam depois mudam as alturas: reajusta até a
+      // pessoa assumir a rolagem (ou por no máximo 3s)
+      const observer = new ResizeObserver(apply);
+      observer.observe(document.body);
+      const inputs = ["wheel", "touchstart", "pointerdown", "keydown"];
+      const stop = () => {
+        observer.disconnect();
+        inputs.forEach((type) => removeEventListener(type, stop));
+      };
+      inputs.forEach((type) => addEventListener(type, stop, { passive: true }));
+      setTimeout(stop, 3000);
+    }
+
+    restorePosition();
+
     // ── Entrada: a página nova já nasceu coberta (html[data-pt="covered"]) ──
     if (root.dataset.pt === "covered") {
       // Troca o véu do <html> pelas barras reais no mesmo quadro: sem salto visual
@@ -171,6 +242,7 @@ const BARS = 6;
       label.textContent = name;
       cover().then(() => {
         try { sessionStorage.setItem(KEY, name || "1"); } catch {}
+        savePosition(url.pathname);
         location.href = url.href;
       });
     });

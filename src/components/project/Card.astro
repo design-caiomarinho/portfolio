@@ -3,7 +3,7 @@ import { getLang, useUI } from "../../i18n";
 
 // Card de destaque. Com `sources`, vira card de evidência (pontinhos + contagem).
 interface Props {
-  label: string;
+  label?: string;
   title: string;
   text: string;
   sources?: number;
@@ -14,7 +14,7 @@ const t = useUI(getLang(Astro.url)).project;
 ---
 
 <article class:list={["card", { "card--evidence": sources }]}>
-  <p class="card__label">{label}</p>
+  {label && <p class="card__label">{label}</p>}
   <div class="card__body">
     <h3>{title}</h3>
     <p class="card__text">{text}</p>

@@ -18,17 +18,17 @@
   --color-gray-900: #101828;
   --color-gray-950: #030712;
 
-  --color-teal-50: #f0fdfa;
-  --color-teal-100: #cbfbf1;
-  --color-teal-200: #96f7e4;
-  --color-teal-300: #46ecd5;
-  --color-teal-400: #00d5be;
-  --color-teal-500: #00bba7;
-  --color-teal-600: #009689;
-  --color-teal-700: #00786f;
-  --color-teal-800: #005f5a;
-  --color-teal-900: #0b4f4a;
-  --color-teal-950: #022f2e;
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd4;
+  --color-orange-200: #ffd6a8;
+  --color-orange-300: #ffb86a;
+  --color-orange-400: #ff8904;
+  --color-orange-500: #ff6900;
+  --color-orange-600: #f54900;
+  --color-orange-700: #ca3500;
+  --color-orange-800: #9f2d00;
+  --color-orange-900: #7e2a0c;
+  --color-orange-950: #441306;
 
   /* ── Semânticos: neutral → gray ──────────────────── */
   --color-neutral-50: var(--color-gray-50);
@@ -43,18 +43,18 @@
   --color-neutral-900: var(--color-gray-900);
   --color-neutral-950: var(--color-gray-950);
 
-  /* ── Semânticos: brand → teal ────────────────────── */
-  --color-brand-50: var(--color-teal-50);
-  --color-brand-100: var(--color-teal-100);
-  --color-brand-200: var(--color-teal-200);
-  --color-brand-300: var(--color-teal-300);
-  --color-brand-400: var(--color-teal-400);
-  --color-brand-500: var(--color-teal-500);
-  --color-brand-600: var(--color-teal-600);
-  --color-brand-700: var(--color-teal-700);
-  --color-brand-800: var(--color-teal-800);
-  --color-brand-900: var(--color-teal-900);
-  --color-brand-950: var(--color-teal-950);
+  /* ── Semânticos: brand → orange (terracota) ──────── */
+  --color-brand-50: var(--color-orange-50);
+  --color-brand-100: var(--color-orange-100);
+  --color-brand-200: var(--color-orange-200);
+  --color-brand-300: var(--color-orange-300);
+  --color-brand-400: var(--color-orange-400);
+  --color-brand-500: var(--color-orange-500);
+  --color-brand-600: var(--color-orange-600);
+  --color-brand-700: var(--color-orange-700);
+  --color-brand-800: var(--color-orange-800);
+  --color-brand-900: var(--color-orange-900);
+  --color-brand-950: var(--color-orange-950);
 
   /* ── Tipografia ──────────────────────────────────── */
   /* "Work Sans Variable" é o nome registrado pelo @fontsource-variable/work-sans */
@@ -117,21 +117,22 @@
   --content-secondary: var(--color-neutral-600);
   --content-tertiary: var(--color-neutral-500);
   --content-accent-primary: var(--color-brand-900);
-  --content-accent-secondary: var(--color-brand-700);
+  --content-accent-secondary: var(--color-brand-800);
 
   --surface-default: var(--color-neutral-50);
   --surface-strong: var(--color-neutral-50);
   --surface-emphasis: var(--color-neutral-100);
   --surface-inverse: var(--color-neutral-950);
   --surface-accent-soft: var(--color-brand-50);
-  --surface-accent-default: var(--color-brand-400);
+  --surface-accent-default: var(--color-brand-600);
 
   --border-default: var(--color-neutral-200);
   --border-soft: var(--color-neutral-100);
+  --border-strong: var(--color-neutral-300); /* NOVO: conferir no Figma */
   --border-inverse: var(--color-neutral-900);
-  --border-accent-soft: var(--color-teal-100);
-  --border-accent-default: var(--color-teal-400);
-  --border-accent-strong: var(--color-teal-700);
+  --border-accent-soft: var(--color-brand-200);
+  --border-accent-default: var(--color-brand-600);
+  --border-accent-strong: var(--color-brand-800);
 
   /* ── layout: space/stack ────────────────────────── */
   --space-stack-2xs: var(--spacing-4);
