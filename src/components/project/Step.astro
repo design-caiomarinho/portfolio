@@ -1,5 +1,6 @@
 ---
 // Linha do processo: etapa à esquerda, título + texto à direita.
+// O que vier dentro da tag (ex.: uma imagem) fica abaixo do texto, antes do filete.
 interface Props {
   label: string;
   title: string;
@@ -15,43 +16,57 @@ interface Props {
 const { label, title, text, items, after, final } = Astro.props;
 ---
 
-<div class:list={["step", { "step--final": final }]}>
-  <p class="case-label">{label}</p>
-  <div class="step__body">
-    <h3>{title}</h3>
-    <p>{text}</p>
-    {
-      items && (
-        <ul class="step__list">
-          {items.map((item) => {
-            const [lead, ...rest] = item.split(": ");
-            return (
-              <li>
-                <strong>{lead}</strong>
-                {rest.length > 0 && `: ${rest.join(": ")}`}
-              </li>
-            );
-          })}
-        </ul>
-      )
-    }
-    {after && <p>{after}</p>}
+<div class:list={["step", { "step--media": Astro.slots.has("default"), "step--final": final }]}>
+  <div class="step__row">
+    <p class="case-label">{label}</p>
+    <div class="step__body">
+      <h3>{title}</h3>
+      <p>{text}</p>
+      {
+        items && (
+          <ul class="step__list">
+            {items.map((item) => {
+              const [lead, ...rest] = item.split(": ");
+              return (
+                <li>
+                  <strong>{lead}</strong>
+                  {rest.length > 0 && `: ${rest.join(": ")}`}
+                </li>
+              );
+            })}
+          </ul>
+        )
+      }
+      {after && <p>{after}</p>}
+    </div>
   </div>
+  <slot />
+  {!final && <span class="rule rule--bottom" data-rule aria-hidden="true"></span>}
 </div>
 
 <style>
   .step {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-inline-md);
+    flex-direction: column;
+    gap: var(--space-stack-xl);
     padding-bottom: var(--space-inset-lg);
-    border-bottom: 1px solid var(--border-default);
+    position: relative;
+  }
+
+  /* Com imagem, o filete ganha mais respiro */
+  .step--media {
+    padding-bottom: var(--space-inset-3xl);
   }
 
   .step--final {
     padding-bottom: 0;
-    border-bottom: 0;
+  }
+
+  .step__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-inline-md);
   }
 
   .step__body {
@@ -63,7 +78,7 @@ const { label, title, text, items, after, final } = Astro.props;
     min-width: 0;
   }
 
-  .step > .case-label {
+  .step__row > .case-label {
     flex: none;
   }
 
@@ -80,7 +95,7 @@ const { label, title, text, items, after, final } = Astro.props;
   }
 
   @media (max-width: 599.98px) {
-    .step {
+    .step__row {
       flex-direction: column;
     }
 

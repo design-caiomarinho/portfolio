@@ -110,6 +110,51 @@ a {
     opacity: 1;
     transform: none;
   }
+
+  .js .rule:not([data-drawn]) {
+    transform: none;
+  }
+
+  .js .rule[data-drawn] {
+    animation: none;
+  }
+}
+
+/*
+ * Filetes: desenham da esquerda para a direita (trim path) quando entram na
+ * tela. Cada filete é um elemento [data-rule], observado pelo script do
+ * Base.astro. --bottom: no lugar de um border-bottom (o pai é relative).
+ */
+.rule {
+  display: block;
+  height: 1px;
+  background: var(--border-default);
+  transform-origin: left;
+}
+
+.rule--bottom {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.js .rule:not([data-drawn]) {
+  transform: scaleX(0);
+}
+
+.js .rule[data-drawn] {
+  animation: rule-draw var(--duration-reveal) var(--ease-standard) var(--rule-delay, 0s) both;
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
 }
 
 /*

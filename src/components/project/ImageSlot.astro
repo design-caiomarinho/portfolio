@@ -12,15 +12,17 @@ interface Props {
   /** Proporção largura/altura do placeholder, ex.: "16 / 10". */
   ratio: string;
   src?: string;
+  /** Carrega de imediato (imagem no topo da página). */
+  eager?: boolean;
 }
 
-const { label, caption, ratio, src, alt = caption } = Astro.props;
+const { label, caption, ratio, src, eager, alt = caption } = Astro.props;
 ---
 
 <figure class="slot">
   {
     src ? (
-      <img class="slot__img" src={src} alt={alt} loading="lazy" decoding="async" />
+      <img class="slot__img" src={src} alt={alt} loading={eager ? "eager" : "lazy"} decoding="async" />
     ) : (
       <div class="slot__box" style={`aspect-ratio: ${ratio}`} role="img" aria-label={alt}>
         <span class="case-label" aria-hidden="true">
@@ -60,7 +62,7 @@ const { label, caption, ratio, src, alt = caption } = Astro.props;
     display: block;
     width: 100%;
     height: auto;
-    border: 1px solid var(--border-soft);
+    border: 1px solid var(--border-default);
     border-radius: var(--radius-md);
   }
 </style>

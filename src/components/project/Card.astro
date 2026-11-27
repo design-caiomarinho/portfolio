@@ -7,15 +7,13 @@ interface Props {
   title: string;
   text: string;
   sources?: number;
-  // Título no tamanho do corpo e conteúdo alinhado ao topo
-  compact?: boolean;
 }
 
-const { label, title, text, sources, compact } = Astro.props;
+const { label, title, text, sources } = Astro.props;
 const t = useUI(getLang(Astro.url)).project;
 ---
 
-<article class:list={["card", { "card--evidence": sources, "card--compact": compact }]}>
+<article class:list={["card", { "card--evidence": sources }]}>
   {label && <p class="card__label">{label}</p>}
   <div class="card__body">
     <h3>{title}</h3>
@@ -50,23 +48,6 @@ const t = useUI(getLang(Astro.url)).project;
 
   .card--evidence {
     gap: var(--space-stack-xl);
-  }
-
-  .card--compact {
-    justify-content: flex-start;
-    gap: var(--space-stack-xs);
-  }
-
-  .card--compact .card__body {
-    gap: var(--space-stack-xs);
-  }
-
-  .card--compact h3 {
-    font-family: var(--typo-body-md-semibold-family);
-    font-size: var(--typo-body-md-semibold-size);
-    font-weight: var(--typo-body-md-semibold-weight);
-    line-height: var(--typo-body-md-semibold-line-height);
-    letter-spacing: var(--typo-body-md-semibold-letter-spacing);
   }
 
   .card__label {

@@ -26,10 +26,11 @@ const lang = getLang(Astro.url);
         eager
         href={localizedPath(lang, "/projects/praieros")}
       />
-      <!-- Sem thumb por enquanto: fica o bloco cinza (passe `image` quando houver) -->
       <ProjectPreview
         title="Prysmo"
         meta={prysmo(lang)("case.meta")}
+        image="/projects/prysmo/thumb.webp"
+        eager
         href={localizedPath(lang, "/projects/prysmo")}
       />
     </div>

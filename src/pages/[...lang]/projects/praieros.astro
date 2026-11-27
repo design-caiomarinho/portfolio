@@ -28,8 +28,8 @@ const sections = [
   { id: "context", label: c.sections.context },
   { id: "problem", label: c.sections.problem },
   { id: "solution", label: c.sections.solution },
-  { id: "ui-highlights", label: c.sections.uiHighlights },
   { id: "process", label: c.sections.process },
+  { id: "ui-highlights", label: c.sections.uiHighlights },
   { id: "outcome", label: c.sections.outcome },
 ];
 
@@ -150,6 +150,21 @@ const [noticeUi, noticeSolution, noticeOutcome] = c.hero.notice.links;
     </div>
   </Section>
 
+  <Section id="process" label={label("process")} gap="2xl">
+    <h2>{c.process.title}</h2>
+
+    <div class="steps">
+      {c.process.steps.map((step, i) => <Step {...step} final={i === c.process.steps.length - 1} />)}
+    </div>
+
+    <div class="case-block">
+      <p>{c.process.rulesIntro}</p>
+      <ol>
+        {c.process.rules.map((rule) => <li>{rule}</li>)}
+      </ol>
+    </div>
+  </Section>
+
   <Section id="ui-highlights" label={label("ui-highlights")}>
     <div class="case-group">
       <div class="case-block">
@@ -209,21 +224,6 @@ const [noticeUi, noticeSolution, noticeOutcome] = c.hero.notice.links;
     <LinkOut href={liveUrl} label={c.ui.live} />
   </Section>
 
-  <Section id="process" label={label("process")} gap="2xl">
-    <h2>{c.process.title}</h2>
-
-    <div class="steps">
-      {c.process.steps.map((step, i) => <Step {...step} final={i === c.process.steps.length - 1} />)}
-    </div>
-
-    <div class="case-block">
-      <p>{c.process.rulesIntro}</p>
-      <ol>
-        {c.process.rules.map((rule) => <li>{rule}</li>)}
-      </ol>
-    </div>
-  </Section>
-
   <Section id="outcome" label={label("outcome")} gap="2xl">
     <div class="case-block">
       <h2>{c.outcome.title}</h2>
@@ -238,6 +238,7 @@ const [noticeUi, noticeSolution, noticeOutcome] = c.hero.notice.links;
       <ol>
         {c.outcome.nextQuestions.map((q) => <li>{q}</li>)}
       </ol>
+      <span class="rule rule--bottom" data-rule aria-hidden="true"></span>
     </div>
 
     <blockquote class="case-quote">

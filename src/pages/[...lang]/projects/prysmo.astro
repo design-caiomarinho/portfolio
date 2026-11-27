@@ -5,6 +5,7 @@ import ImageSlot from "../../../components/project/ImageSlot.astro";
 import Meta from "../../../components/project/Meta.astro";
 import Notice from "../../../components/project/Notice.astro";
 import Card from "../../../components/project/Card.astro";
+import BeforeAfter from "../../../components/project/BeforeAfter.astro";
 import Step from "../../../components/project/Step.astro";
 import OutcomeTable from "../../../components/project/OutcomeTable.astro";
 import { getLang, langPaths } from "../../../i18n";
@@ -21,42 +22,37 @@ const t = prysmo(getLang(Astro.url));
  * ex.: "context": "/projects/prysmo/three-teams.png". Sem caminho, fica o placeholder.
  */
 const images: Record<string, string | undefined> = {
-  "hero": undefined,
-  "context": undefined,
-  "problem": undefined,
-  "solution": undefined,
-  "contact-sheet": undefined,
-  "list": undefined,
-  "filters": undefined,
-  "all-notes": undefined,
-  "open-note": undefined,
-  "select": undefined,
-  "mark": undefined,
-  "marked": undefined,
-  "trail": undefined,
-  "error": undefined,
-  "affinity": undefined,
-  "interface-lens": undefined,
-  "impact-effort": undefined,
+  "hero": "/projects/prysmo/hero.webp",
+  "problem": "/projects/prysmo/flow-map.webp",
+  "list": "/projects/prysmo/screen-list.webp",
+  "open-note": "/projects/prysmo/screen-open-note.webp",
+  "select": "/projects/prysmo/screen-select.webp",
+  "mark": "/projects/prysmo/screen-mark.webp",
+  "marked": "/projects/prysmo/screen-marked.webp",
+  "trail": "/projects/prysmo/screen-trail.webp",
+  "affinity": "/projects/prysmo/affinity-map.webp",
+  "interface-lens": "/projects/prysmo/interface-lens.webp",
+  "impact-effort": "/projects/prysmo/impact-effort.webp",
 };
 
-// Galeria na ordem de uso. O rótulo do placeholder é o nome do frame no Figma
+// Galeria na ordem de uso, uma linha por item; linha com duas telas vira grid de 2.
+// O "frame" é o nome da tela no Figma
+const wide = "2000 / 1273";
+const tall = "1253 / 1595";
 const highlights = [
-  ["contact-sheet", "16 desktop frames"],
-  ["list", "Pendentes / Desktop"],
-  ["filters", "Filtros / Desktop"],
-  ["all-notes", "Todas as notas / Desktop"],
-  ["open-note", "Nota aberta / Desktop"],
-  ["select", "Trecho selecionado / Desktop"],
-  ["mark", "Marcar trecho / Desktop"],
-  ["marked", "Notas marcadas / Desktop"],
-  ["trail", "Trilha da marcação / Desktop"],
-  ["error", "Erro / Desktop"],
+  [{ key: "list", frame: "Pendentes / Desktop", ratio: wide, alt: t("highlights.list.alt") }],
+  [{ key: "open-note", frame: "Nota aberta / Desktop", ratio: wide, alt: t("highlights.open-note.alt") }],
+  [
+    { key: "select", frame: "Trecho selecionado / Desktop", ratio: tall, alt: t("highlights.select.alt") },
+    { key: "mark", frame: "Marcar trecho / Desktop", ratio: tall, alt: t("highlights.mark.alt") },
+  ],
+  [{ key: "marked", frame: "Notas marcadas / Desktop", ratio: wide, alt: t("highlights.marked.alt") }],
+  [{ key: "trail", frame: "Trilha da marcação / Desktop", ratio: wide, alt: t("highlights.trail.alt") }],
 ] as const;
 
 // Os ids são âncoras fixas; só o rótulo muda com o idioma
 const sections = (
-  ["intro", "context", "problem", "solution", "highlights", "process", "outcome"] as const
+  ["intro", "context", "problem", "solution", "process", "highlights", "outcome"] as const
 ).map((id) => ({ id, label: t(`${id}.title`) }));
 
 const label = (id: string) => sections.find((s) => s.id === id)!.label;
@@ -80,7 +76,7 @@ const metaItem = (key: PrysmoKey) => {
     <h1>{t("case.title")}</h1>
 
     <div class="hero__media">
-      <ImageSlot label="Hero" alt={t("case.title")} ratio="2560 / 1630" src={images["hero"]} />
+      <ImageSlot eager label="Hero" alt={t("case.hero-alt")} ratio="2560 / 1630" src={images["hero"]} />
 
       <Meta
         items={[
@@ -124,7 +120,6 @@ const metaItem = (key: PrysmoKey) => {
       {
         ([1, 2, 3] as const).map((n) => (
           <Card
-            compact
             label={`${t("context.step")} ${n}`}
             title={t(`context.team${n}.name`)}
             text={t(`context.team${n}.text`)}
@@ -135,11 +130,14 @@ const metaItem = (key: PrysmoKey) => {
 
     <p>{t("context.text3")}</p>
 
-    <ImageSlot
-      label={t("context.image-slot1")}
+    <BeforeAfter
+      before={{ src: "/projects/prysmo/notes-before.webp", alt: t("context.compare-before-alt") }}
+      after={{ src: "/projects/prysmo/notes-after.webp", alt: t("context.compare-after-alt") }}
+      valueText={t("context.compare-value")}
+      width={2000}
+      height={1273}
+      controlLabel={t("context.compare-control")}
       caption={t("context.caption1")}
-      ratio="16 / 9"
-      src={images["context"]}
     />
   </Section>
 
@@ -153,7 +151,6 @@ const metaItem = (key: PrysmoKey) => {
       {
         ([1, 2, 3, 4] as const).map((n) => (
           <Card
-            compact
             label={t(`problem.card${n}.label`)}
             title={t(`problem.card${n}.title`)}
             text={t(`problem.card${n}.text`)}
@@ -165,6 +162,7 @@ const metaItem = (key: PrysmoKey) => {
     <ImageSlot
       label={t("problem.image-slot1")}
       caption={t("problem.caption1")}
+      alt={t("problem.alt1")}
       ratio="2.1 / 1"
       src={images["problem"]}
     />
@@ -192,41 +190,12 @@ const metaItem = (key: PrysmoKey) => {
         ))
       }
     </div>
-
-    <ImageSlot
-      label={t("solution.image-slot1")}
-      caption={t("solution.caption1")}
-      ratio="1.3 / 1"
-      src={images["solution"]}
-    />
-  </Section>
-
-  <Section id="highlights" label={label("highlights")}>
-    <div class="case-group">
-      <div class="case-block">
-        <h2>{t("highlights.intro1")}</h2>
-        <p>{t("highlights.intro2")}</p>
-      </div>
-
-      <div class="case-figures gallery">
-        {
-          highlights.map(([key, frame]) => (
-            <ImageSlot
-              label={frame}
-              caption={t(`highlights.${key}.caption`)}
-              ratio="16 / 10"
-              src={images[key]}
-            />
-          ))
-        }
-      </div>
-    </div>
   </Section>
 
   <Section id="process" label={label("process")} gap="2xl">
     <h2>{t("process.lead1")}</h2>
 
-    <div class="steps">
+    <div class="steps steps--media">
       <Step
         label={t("process.step1.label")}
         title={t("process.item1")}
@@ -241,61 +210,83 @@ const metaItem = (key: PrysmoKey) => {
         label={t("process.step3.label")}
         title={t("process.item5")}
         text={t("process.item6")}
-      />
-    </div>
-
-    <ImageSlot
-      label={t("process.image-slot1")}
-      caption={t("process.caption1")}
-      ratio="1 / 1.5"
-      src={images["affinity"]}
-    />
-
-    <div class="steps">
+      >
+        <ImageSlot
+          label={t("process.image-slot1")}
+          caption={t("process.caption1")}
+          alt={t("process.alt1")}
+          ratio="1731 / 2000"
+          src={images["affinity"]}
+        />
+      </Step>
       <Step
         label={t("process.step4.label")}
         title={t("process.item7")}
         text={t("process.item8")}
-        items={([1, 2, 3, 4] as const).map((n) => t(`process.item8.b${n}`))}
-        after={t("process.item8.after")}
       />
       <Step
         label={t("process.step5.label")}
         title={t("process.item9")}
         text={t("process.item10")}
-        items={([1, 2, 3, 4] as const).map((n) => t(`process.item10.b${n}`))}
-      />
-    </div>
-
-    <ImageSlot
-      label={t("process.image-slot2")}
-      caption={t("process.caption2")}
-      ratio="1 / 1.2"
-      src={images["interface-lens"]}
-    />
-
-    <div class="steps">
+      >
+        <ImageSlot
+          label={t("process.image-slot2")}
+          caption={t("process.caption2")}
+          alt={t("process.alt2")}
+          ratio="1731 / 2000"
+          src={images["interface-lens"]}
+        />
+      </Step>
       <Step
         label={t("process.step6.label")}
         title={t("process.item11")}
         text={t("process.item12")}
-      />
-    </div>
-
-    <ImageSlot
-      label={t("process.image-slot3")}
-      caption={t("process.caption3")}
-      ratio="1 / 1.2"
-      src={images["impact-effort"]}
-    />
-
-    <div class="steps">
+      >
+        <ImageSlot
+          label={t("process.image-slot3")}
+          caption={t("process.caption3")}
+          alt={t("process.alt3")}
+          ratio="1725 / 2000"
+          src={images["impact-effort"]}
+        />
+      </Step>
       <Step
-        final
         label={t("process.step7.label")}
         title={t("process.item13")}
         text={t("process.item14")}
       />
+      <Step
+        final
+        label={t("process.step8.label")}
+        title={t("process.item15")}
+        text={t("process.item16")}
+      />
+    </div>
+  </Section>
+
+  <Section id="highlights" label={label("highlights")}>
+    <div class="case-group">
+      <div class="case-block">
+        <h2>{t("highlights.intro1")}</h2>
+        <p>{t("highlights.intro2")}</p>
+      </div>
+
+      <div class="case-figures gallery">
+        {
+          highlights.map((row) => {
+            const shots = row.map((shot) => (
+              <ImageSlot
+                label={shot.frame}
+                caption={t(`highlights.${shot.key}.caption`)}
+                alt={shot.alt}
+                ratio={shot.ratio}
+                src={images[shot.key]}
+              />
+            ));
+            return row.length > 1 ? <div class="figure-pair">{shots}</div> : shots;
+          })
+        }
+      </div>
     </div>
   </Section>
 
@@ -321,6 +312,7 @@ const metaItem = (key: PrysmoKey) => {
         <li>{t("outcome.item8")}</li>
         <li>{t("outcome.item9")}</li>
       </ul>
+      <span class="rule rule--bottom" data-rule aria-hidden="true"></span>
     </div>
 
     <blockquote class="case-quote">
@@ -362,21 +354,35 @@ const metaItem = (key: PrysmoKey) => {
     grid-auto-rows: 1fr;
   }
 
-  /* Título de cada card sempre em duas linhas equilibradas */
-  .cards--two :global(h3) {
-    max-width: 16ch;
-    text-wrap: balance;
-  }
-
   @media (min-width: 600px) {
     .cards--two {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
+  /* Duas imagens lado a lado; no celular, uma embaixo da outra */
+  .figure-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-stack-lg);
+  }
+
+  @media (min-width: 600px) {
+    .figure-pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-stack-md);
+    }
+  }
+
   /* Cada tela tem legenda própria: um respiro maior separa uma da outra */
   .gallery {
     gap: var(--space-stack-2xl);
+  }
+
+  /* No celular, o par empilhado mantém o mesmo respiro da galeria */
+  .gallery .figure-pair {
+    row-gap: var(--space-stack-2xl);
   }
 
   .next {

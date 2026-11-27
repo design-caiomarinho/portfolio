@@ -12,6 +12,7 @@ const { heads, rows } = Astro.props;
   <div class="table__row table__row--head" role="row">
     <p class="case-label" role="columnheader">{heads[0]}</p>
     <p class="case-label" role="columnheader">{heads[1]}</p>
+    <span class="rule rule--bottom" data-rule aria-hidden="true"></span>
   </div>
   {
     rows.map((row) => (
@@ -21,6 +22,7 @@ const { heads, rows } = Astro.props;
           {row.title && <h3>{row.title}</h3>}
           <p>{row.text}</p>
         </div>
+        <span class="rule rule--bottom" data-rule aria-hidden="true"></span>
       </div>
     ))
   }
@@ -39,7 +41,7 @@ const { heads, rows } = Astro.props;
     gap: var(--space-inline-md);
     align-items: start;
     padding-bottom: var(--space-inset-lg);
-    border-bottom: 1px solid var(--border-default);
+    position: relative;
   }
 
   .table__built {

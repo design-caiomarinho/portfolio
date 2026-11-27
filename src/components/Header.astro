@@ -163,6 +163,32 @@ const languages: { code: Lang; label: string; name: string; href: string }[] = [
   desktop.addEventListener("change", (e) => {
     if (e.matches) setOpen(false);
   });
+
+  // Navbar do case: há sobreposição se o título ou o seletor de idioma invadem
+  // a largura da coluna de leitura (com 8px de folga)
+  const crumb = header?.querySelector<HTMLElement>(".header__crumb");
+  const actions = header?.querySelector<HTMLElement>(".header__actions");
+
+  function checkOverlap() {
+    const content = document.querySelector<HTMLElement>(".case__content");
+    const column = content?.firstElementChild;
+    if (!header || !crumb || !actions || !column) return;
+    const { left, right } = column.getBoundingClientRect();
+    header.toggleAttribute(
+      "data-overlap",
+      crumb.getBoundingClientRect().right + 8 > left ||
+        actions.getBoundingClientRect().left - 8 < right,
+    );
+  }
+
+  if (crumb) {
+    // Reage à largura da janela, à coluna do índice (ajustada por script) e à fonte
+    const watcher = new ResizeObserver(checkOverlap);
+    watcher.observe(crumb);
+    const content = document.querySelector(".case__content");
+    if (content) watcher.observe(content);
+    window.addEventListener("resize", checkOverlap);
+  }
 </script>
 
 <style>
@@ -176,6 +202,21 @@ const languages: { code: Lang; label: string; name: string; href: string }[] = [
     position: sticky;
     top: 0;
     z-index: 30;
+  }
+
+  /*
+   * A barra só ganha fundo quando o texto passaria por baixo dela: data-overlap
+   * é ligado pelo script, que compara a barra com a coluna de leitura. A media
+   * query cobre mobile e tablet (sempre sobrepõem) antes de o script rodar.
+   */
+  .header--project[data-overlap] {
+    background: var(--surface-default);
+  }
+
+  @media (max-width: 1023.98px) {
+    .header--project {
+      background: var(--surface-default);
+    }
   }
 
   /* Âncoras do índice não ficam escondidas atrás da barra fixa */

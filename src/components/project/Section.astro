@@ -12,7 +12,7 @@ const { id, label, gap = "3xl" } = Astro.props;
 <section class="section" id={id} aria-label={label}>
   <div class="section__head">
     <p class="case-label">{label}</p>
-    <span class="section__rule"></span>
+    <span class="rule section__rule" data-rule aria-hidden="true"></span>
   </div>
   <div class:list={["section__body", `section__body--${gap}`]}>
     <slot />
@@ -35,9 +35,7 @@ const { id, label, gap = "3xl" } = Astro.props;
 
   .section__rule {
     flex: 1 1 0;
-    height: 1px;
     min-width: 1px;
-    background: var(--border-default);
   }
 
   .section__body {

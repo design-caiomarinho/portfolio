@@ -14,8 +14,8 @@ interface Props {
   eager?: boolean;
 }
 
-// Padrão do case: raio de 12px e borda soft. "default"/"none" só como exceção.
-const { src, alt, width, height, caption, video, border = "soft", eager = false } = Astro.props;
+// Padrão do case: raio de 12px e borda default. "soft"/"none" só como exceção.
+const { src, alt, width, height, caption, video, border = "default", eager = false } = Astro.props;
 const mediaClass = ["figure__img", border !== "none" && `figure__img--${border}`];
 ---
 

@@ -74,22 +74,27 @@ const copy = {
     pt: "Resultado",
   },
 
+  "case.hero-alt": {
+    en: "Session reading screen in three columns: list of speakers, speeches with highlighted passages, and a panel of marks with teams, status and actions.",
+    pt: "Tela de leitura de uma sessão em três colunas: lista de oradores, discursos com trechos destacados e painel de marcações com equipes, estado e ações.",
+  },
+
   // 2. Introduction
   "intro.title": {
     en: "Introduction",
     pt: "Introdução",
   },
   "intro.lead1": {
-    en: "A speech is given in Congress. Before a client hears about it, three teams work on it. Who knows where it is?",
-    pt: "Um discurso é feito no Congresso. Antes de um cliente saber dele, três equipes trabalham nele. Quem sabe onde ele está?",
+    en: "A speech is given in Congress. Before a client hears about it, a team reads it and decides which passages matter. How does that team know what happens next?",
+    pt: "Um discurso é feito no Congresso. Antes de um cliente saber dele, uma equipe o lê e decide quais trechos importam. Como essa equipe sabe o que acontece depois?",
   },
   "intro.text1": {
-    en: "At Prysmo, a public affairs platform from Prospectiva, each speech passes through three teams, one after the other. The teams felt the difficulties in their daily work. When I looked closer, the trouble was not inside each team's screens. It was in the handoffs between them.",
-    pt: "No Prysmo, plataforma de Public Affairs da Prospectiva, cada discurso passa por três equipes, uma depois da outra. As equipes sentiam as dificuldades no dia a dia. Ao olhar de perto, vi que o problema não estava dentro das telas de cada equipe. Estava nas passagens entre elas.",
+    en: "Prysmo is a legislative intelligence platform. The Content team reads each official transcript and marks the passages that matter, and two more teams take the work from there. The screens were built without design, and the team felt it. When I looked closer, the trouble was not only on the screen. It was in what happened to the work after the team sent it on.",
+    pt: "O Prysmo é uma plataforma de inteligência legislativa. A equipe de Conteúdo lê cada nota taquigráfica e marca os trechos que importam, e outras duas equipes seguem o trabalho a partir dali. As telas foram feitas sem design, e a equipe sentia isso. Ao olhar de perto, vi que o problema não estava só na tela. Estava no que acontecia com o trabalho depois que a equipe o passava adiante.",
   },
   "intro.text2": {
-    en: "This work is the redesign of that flow, delivered to the team. Understanding the flow was essential for the delivery to have a positive effect on the team's own work process. The project is in progress: as planned, the first team is delivered, and the others are already in development.",
-    pt: "Esta atividade é o redesenho entregue à equipe sobre esse fluxo. O entendimento do fluxo foi fundamental para que a entrega afetasse positivamente a equipe no seu respectivo processo de trabalho. O projeto está em andamento: conforme o planejamento, a primeira equipe está entregue e as demais já estão em desenvolvimento.",
+    en: "This case is my redesign of the Content team's curation flow, the first of three in the project. I mapped the whole path of a speech first, then designed Content's screens on top of it. The Content flow is delivered. While the other two are being designed, here is how I got to it.",
+    pt: "Este case é o meu redesenho do fluxo de curadoria da equipe de Conteúdo, o primeiro dos três do projeto. Mapeei primeiro o caminho inteiro de um discurso e depois desenhei as telas do Conteúdo em cima dele. O fluxo do Conteúdo está entregue. Enquanto os outros dois são desenhados, acompanhe como cheguei até ele.",
   },
 
   // 3. Context
@@ -98,12 +103,12 @@ const copy = {
     pt: "Contexto",
   },
   "context.text1": {
-    en: "Prysmo is a platform from Prospectiva Public Affairs LAT.AM that brings together curated information on stakeholders and issues to support public affairs strategies. Its monitoring ranges from social media to the floor of Congress, supported by AI and specialists. This case covers one part of that work: how teams follow what is said in the Brazilian Congress and bring that information to clients.",
-    pt: "O Prysmo é uma plataforma da Prospectiva Public Affairs LAT.AM que reúne informação com curadoria sobre stakeholders e temas para apoiar estratégias de Public Affairs. O monitoramento vai das redes sociais ao plenário do Congresso, com apoio de IA e especialistas. Este case trata de uma parte desse trabalho: como as equipes acompanham o que é dito no Congresso Nacional e levam essa informação aos clientes.",
+    en: "Prysmo is a platform from Prospectiva. Its teams use it to follow what is said in the Brazilian Congress and to serve their clients.",
+    pt: "O Prysmo é uma plataforma da Prospectiva. As equipes a usam para acompanhar o que é dito no Congresso Nacional e atender seus clientes.",
   },
   "context.text2": {
-    en: "Three teams work on each speech. Each one has a different role in the validation process, with its own unit of work.",
-    pt: "Três equipes trabalham em cada discurso. Cada uma tem um papel diferente no processo de validação, com sua própria unidade de trabalho.",
+    en: "Three teams work on each speech, one after the other. Each one sees a different application, with its own unit of work: note, case, issue, passage. This case follows the first team.",
+    pt: "Três equipes trabalham em cada discurso, uma depois da outra. Cada uma enxerga um aplicativo diferente, com sua própria unidade de trabalho: nota, caso, issue, trecho. Este case acompanha a primeira equipe.",
   },
   "context.step": {
     en: "Step",
@@ -134,16 +139,28 @@ const copy = {
     pt: "Cadastra os clientes interessados e o impacto do discurso para cada um deles.",
   },
   "context.text3": {
-    en: "The first version, built by the internal team, did not go through a design process. I was brought in to improve the experience and architecture of the screens and to make the teams' work more integrated. To do that, it only made sense to start by understanding the whole path of a speech.",
-    pt: "A primeira versão, desenvolvida pela equipe interna, não passou por um processo de design. Fui acionado para melhorar a experiência e a arquitetura das telas e tornar o trabalho das equipes mais integrado. Para isso, nada mais justo do que começar entendendo o caminho inteiro de um discurso.",
+    en: "The screens were built by the development team, with no design work. I was brought in to improve how the teams' work flows. I started with the whole path of a speech, so that Content's screens would fit what comes after them.",
+    pt: "As telas foram feitas pela equipe de desenvolvimento, sem trabalho de design. Fui chamado para melhorar como o trabalho das equipes flui. Comecei pelo caminho inteiro de um discurso, para que as telas do Conteúdo se encaixassem no que vem depois delas.",
   },
-  "context.image-slot1": {
-    en: "The three teams",
-    pt: "As três equipes",
+  "context.compare-before-alt": {
+    en: "Before: list of official transcripts with three counters at the top, collapsed filters and a \"View transcript\" button on each session.",
+    pt: "Antes: lista de notas taquigráficas com três contadores no topo, filtros recolhidos e um botão “Ver nota taquigráfica” em cada sessão.",
+  },
+  "context.compare-after-alt": {
+    en: "After: the list opens on pending transcripts, with status tabs, search and visible filters. Each session shows its status and a \"Mark passages\" button.",
+    pt: "Depois: a lista abre nas notas pendentes, com abas por estado, busca e filtros visíveis. Cada sessão mostra seu estado e o botão “Marcar trechos”.",
+  },
+  "context.compare-value": {
+    en: "{value}% of the previous screen visible",
+    pt: "{value}% da tela anterior visível",
+  },
+  "context.compare-control": {
+    en: "Drag to compare before and after",
+    pt: "Arraste para comparar o antes e o depois",
   },
   "context.caption1": {
-    en: "Each speech passes through three teams, one after the other.",
-    pt: "Cada discurso passa por três equipes, uma depois da outra.",
+    en: "The Content team's note screen side by side: before the redesign and after it. Client names and critical data have been hidden.",
+    pt: "A tela de nota da equipe de Conteúdo lado a lado: antes do redesenho e depois dele. Nomes de clientes e dados críticos foram ocultados.",
   },
 
   // 4. Problem
@@ -152,76 +169,80 @@ const copy = {
     pt: "Problema",
   },
   "problem.lead1": {
-    en: "Each team worked well alone. The work got lost between teams",
-    pt: "Cada equipe funcionava sozinha. O trabalho se perdia entre elas",
+    en: "Content's work was clear on screen and confusing once it left it.",
+    pt: "O trabalho do Conteúdo era claro na tela e confuso depois que saía dela.",
   },
   "problem.text1": {
-    en: "To define the task architecture, I walked through the environment where the system was developed, the same one the teams were using, and recorded 162 findings. The signs of the problem kept showing up in the same place: where one team hands work to the next.",
-    pt: "Para definir a arquitetura das tarefas, percorri o ambiente em que o sistema foi desenvolvido, o mesmo que as equipes estavam usando, e registrei 162 achados. Os sinais do problema apareciam sempre no mesmo lugar: onde uma equipe passa o trabalho para a próxima.",
+    en: "I walked through the test environment in every role and recorded 162 findings, 69 of them in Content. The signs of the problem always showed up where the team's work leaves its hands and reaches the next one.",
+    pt: "Percorri o ambiente de teste em todos os papéis e registrei 162 achados, 69 deles no Conteúdo. Os sinais do problema apareciam sempre onde o trabalho da equipe sai de suas mãos e chega à próxima.",
   },
   "problem.card1.label": {
     en: "Naming",
     pt: "Nomenclatura",
   },
   "problem.card1.title": {
-    en: "5 names for the same moment",
-    pt: "5 nomes para o mesmo momento",
+    en: "Five names, one moment",
+    pt: "Cinco nomes, um momento",
   },
   "problem.card1.text": {
-    en: "A single moment of a speech showed up on screens under five different names.",
-    pt: "Um único momento do discurso aparecia nas telas com cinco nomes diferentes.",
+    en: "Across the system's screens, a single moment of a speech was identified by five different names.",
+    pt: "Nas telas do sistema, um único momento de um discurso aparecia identificado por cinco nomes diferentes.",
   },
   "problem.card2.label": {
-    en: "Stalled queue",
-    pt: "Fila parada",
+    en: "Concentration",
+    pt: "Concentração",
   },
   "problem.card2.title": {
-    en: "33 issues awaiting registration",
-    pt: "33 issues à espera de cadastro",
+    en: "69 findings in Content",
+    pt: "69 achados no Conteúdo",
   },
   "problem.card2.text": {
-    en: "Already approved, they waited for client registration. The oldest, for 16 days.",
-    pt: "Já aprovadas, aguardavam o cadastro de clientes. A mais antiga, havia 16 dias.",
+    en: "It was the highest number among the three roles: 69 of the 162 findings recorded in the walkthrough.",
+    pt: "Foi o maior número entre os três papéis: 69 dos 162 achados registrados em todo o percurso.",
   },
   "problem.card3.label": {
     en: "Status",
     pt: "Status",
   },
   "problem.card3.title": {
-    en: "The trail missed the adjustment",
-    pt: "O ajuste não aparecia na trilha",
+    en: "Missing from the trail",
+    pt: "Ajuste fora da trilha",
   },
   "problem.card3.text": {
-    en: "When Client Service asked for a change, the passage still showed as done.",
-    pt: "Quando o Atendimento pedia um ajuste, o trecho ainda constava como concluído.",
+    en: "When Client Service asked for a change, a passage marked by Content still showed as done.",
+    pt: "Quando o Atendimento pedia um ajuste, o trecho marcado pelo Conteúdo ainda constava como concluído.",
   },
   "problem.card4.label": {
     en: "Critical risk",
     pt: "Risco crítico",
   },
   "problem.card4.title": {
-    en: "One click could restart a case",
-    pt: "Um clique podia reiniciar um caso",
+    en: "One-click restart",
+    pt: "Reinício em um clique",
   },
   "problem.card4.text": {
-    en: "In Content, this undid the work of other teams, with no warning on the button.",
-    pt: "No Conteúdo, isso desfazia o trabalho de outras equipes, sem aviso no botão.",
+    en: "In Content, one click could restart a case and undo other teams' work, with no warning on the button.",
+    pt: "No Conteúdo, um clique podia reiniciar um caso e desfazer o trabalho de outras equipes, sem aviso.",
   },
   "problem.image-slot1": {
     en: "End-to-end flow with return paths",
     pt: "Fluxo ponta a ponta com os caminhos de volta",
   },
   "problem.caption1": {
-    en: "Five return paths have no defined destination.",
-    pt: "Cinco caminhos de volta não têm destino definido.",
+    en: "Returns and edits cross teams: paths validated on screen, others assumed from analysis.",
+    pt: "Retornos e edições cruzam equipes: caminhos validados na tela, outros assumidos a partir da análise.",
+  },
+  "problem.alt1": {
+    en: "End-to-end flowchart in lanes: Content, Analyst, Review (next sprint) and Client Service. Revoking, editing, a review rejection and an adjustment request send work from one lane to another, while reopening stays in Client Service. Colors set apart what was seen on screen, assumptions to validate, passage states and decisions.",
+    pt: "Fluxograma ponta a ponta em raias: Conteúdo, Analista, Revisão (próxima sprint) e Atendimento. Revogação, edição, rejeição na revisão e pedido de ajuste levam o trabalho de uma raia para outra, e a reabertura fica no Atendimento. As cores separam o que foi visto nas telas, as hipóteses a validar, os estados do trecho e as decisões.",
   },
   "problem.text2": {
-    en: "The problem, in short",
-    pt: "O problema, em resumo",
+    en: "The problem, in one sentence",
+    pt: "O problema, em uma frase",
   },
   "problem.text3": {
-    en: "At every step, anyone working on a speech needs to know three things: where it is, who has it, and what happens if it comes back. Without those answers, work stalls in the handoff between teams, or one team undoes another's work without realizing it",
-    pt: "Em cada etapa, quem trabalha em um discurso precisa saber três coisas: onde ele está, com quem está e o que acontece se ele voltar. Sem essas respostas, o trabalho trava na passagem entre as equipes, ou uma desfaz o que a outra fez sem perceber",
+    en: "Anyone working in Content needs to mark the right passages with confidence and then know where each one is, who has it, and what happens when they edit it or when it comes back. Without that, work stalls between teams, or Content undoes other teams' work without knowing.",
+    pt: "Quem trabalha no Conteúdo precisa marcar os trechos certos com segurança e saber depois onde cada um está, com quem está e o que acontece quando o edita ou quando ele volta. Sem isso, o trabalho trava entre as equipes, ou o Conteúdo desfaz o trabalho de outras equipes sem saber.",
   },
 
   // 5. Solution
@@ -230,56 +251,48 @@ const copy = {
     pt: "Solução",
   },
   "solution.lead1": {
-    en: "Well-defined connections as the foundation for a rebuild",
-    pt: "Conexões bem definidas como base para uma reconstrução",
+    en: "Designing Content's screens on top of the map of the whole flow.",
+    pt: "Desenhar as telas do Conteúdo sobre o mapa do fluxo inteiro.",
   },
   "solution.text1": {
-    en: "The solution is a flow where every handoff is defined and where one team's actions are visible to the next. I designed the first team's work on top of it. Three decisions carry the project.",
-    pt: "A solução é um fluxo em que cada passagem é definida e em que as ações de uma equipe são visíveis para a seguinte. Desenhei o trabalho da primeira equipe em cima dele. Três decisões sustentam o projeto.",
+    en: "The solution is a curation flow where the team reads, selects, marks and tracks each passage, and where every handoff to the next team is defined. Three decisions support it.",
+    pt: "A solução é um fluxo de curadoria em que a equipe lê, seleciona, marca e acompanha cada trecho, e em que cada passagem para a equipe seguinte é definida. Três decisões o sustentam.",
   },
   "solution.d1.label": {
     en: "Decision 1",
     pt: "Decisão 1",
   },
   "solution.d1.title": {
-    en: "Look at the whole flow before fixing the first team",
-    pt: "Olhar o fluxo inteiro antes de consertar a primeira equipe",
+    en: "Look at the whole flow before fixing Content",
+    pt: "Olhar o fluxo inteiro antes de consertar o Conteúdo",
   },
   "solution.d1.text": {
-    en: "I could have audited only the team I was assigned to. I mapped all three first. The map showed a clear main path and five return paths with no defined destination: a rejection in review, an adjustment request, an edit, a reopening and a revocation. Each one crosses a team boundary, so no single team's screens could solve it. Fixing the first team without this map would have meant redoing parts of it later.",
-    pt: "Eu poderia ter auditado só a equipe da minha demanda. Mapeei as três primeiro. O mapa mostrou um caminho principal claro e cinco caminhos de volta sem destino definido: uma rejeição na revisão, um pedido de ajuste, uma edição, uma reabertura e uma revogação. Cada um atravessa a fronteira entre duas equipes, então nenhuma tela isolada resolveria. Consertar a primeira equipe sem esse mapa significaria refazer parte do trabalho depois.",
+    en: "I could have audited only Content. I mapped all three teams first. The map showed a clear main path and five return paths with no defined destination: a rejection in review, an adjustment request, an edit, a reopening and a revocation. Each one crosses the boundary between two teams, so no single screen could solve it. Fixing Content without this map would have meant redoing part of the work later.",
+    pt: "Eu poderia ter auditado só o Conteúdo. Mapeei as três equipes primeiro. O mapa mostrou um caminho principal claro e cinco caminhos de volta sem destino definido: uma rejeição na revisão, um pedido de ajuste, uma edição, uma reabertura e uma revogação. Cada um atravessa a fronteira entre duas equipes, então nenhuma tela isolada resolveria. Consertar o Conteúdo sem esse mapa significaria refazer parte do trabalho depois.",
   },
   "solution.d2.label": {
     en: "Decision 2",
     pt: "Decisão 2",
   },
   "solution.d2.title": {
-    en: "Make one team's actions visible to the others",
-    pt: "Tornar visível o que uma equipe causa nas outras",
+    en: "Make visible what Content causes in the other teams",
+    pt: "Tornar visível o que o Conteúdo causa nas outras equipes",
   },
   "solution.d2.text": {
-    en: "The critical finding came from this idea. Editing a passage that was already classified restarted the case and sent it back to the analyst, and the only warning sat inside the edit window. In the Content path, I drew where each action lands in the next team. Then I wrote the rules the team needed to confirm, as assumptions built from the findings: fixing only a speaker's name does not restart the case, changing the passage or the teams does, and the button says so first. Revoking asks for a reason, notifies the teams that received the passage and keeps registered clients as history.",
-    pt: "O achado crítico nasceu dessa ideia. Editar um trecho já classificado reiniciava o caso e o devolvia ao analista, e o único aviso ficava dentro da janela de edição. No caminho do Conteúdo, desenhei onde cada ação chega na equipe seguinte. Depois escrevi as regras que o time precisava confirmar, como hipóteses construídas a partir dos achados: corrigir só o nome do orador não reinicia o caso, mudar o trecho ou as equipes reinicia, e o botão avisa antes. Revogar pede um motivo, avisa as equipes que receberam o trecho e mantém os clientes cadastrados como histórico.",
+    en: "The critical finding came from this idea. Editing a passage that was already classified restarted the case and sent it back to the analyst, and the only warning sat inside the edit window. On the flow map, I drew where each action lands in the next team. Then I wrote the rules the team needed to confirm, as assumptions built from the findings: fixing only a speaker's name does not restart the case, changing the passage or the teams does, and the button says so first. Revoking asks for a reason, notifies the teams that received the passage and keeps registered clients as history.",
+    pt: "O achado crítico nasceu dessa ideia. Editar um trecho já classificado reiniciava o caso e o devolvia ao analista, e o único aviso ficava dentro da janela de edição. No mapa do fluxo, desenhei onde cada ação chega na equipe seguinte. Depois escrevi as regras que o time precisava confirmar, como suposições construídas a partir dos achados: corrigir só o nome do orador não reinicia o caso, mudar o trecho ou as equipes reinicia, e o botão avisa antes. Revogar pede um motivo, avisa as equipes que receberam o trecho e mantém os clientes cadastrados como histórico.",
   },
   "solution.d3.label": {
     en: "Decision 3",
     pt: "Decisão 3",
   },
   "solution.d3.title": {
-    en: "Separate what needs the team from what does not",
+    en: "Separate what depends on the team from what does not",
     pt: "Separar o que depende do time do que não depende",
   },
   "solution.d3.text": {
-    en: "Some findings depended on answers from specific teams to define the rules. Others became certainties in the weekly sprint conversations. The answers would start with an internal survey, but waiting for all of them would stall the delivery. So we moved forward, combining facts with assumptions based on the patterns we had identified. The idea was to reduce the impact of adjustments in case new feedback pointed in a different direction from the one we had been following.",
-    pt: "Parte dos achados dependia de respostas de equipes específicas para definir as regras. Outra parte virou certeza nas conversas das sprints semanais. As respostas começariam por uma pesquisa interna, mas esperar por todas elas travaria a entrega. Por isso, avançamos combinando fatos com hipóteses baseadas nos padrões identificados. A ideia era reduzir o impacto dos ajustes caso um novo retorno apontasse um caminho diferente do que vínhamos seguindo.",
-  },
-  "solution.image-slot1": {
-    en: "Content path",
-    pt: "Caminho do Conteúdo",
-  },
-  "solution.caption1": {
-    en: "The Content path shows what each action causes in the next team.",
-    pt: "O caminho do Conteúdo mostra o que cada ação causa na equipe seguinte.",
+    en: "Some findings could not be designed until the team decided on a rule. Others were purely interface. Mixing the two would have stalled the design. 47 of the 162 findings did not depend on anyone's decision, so they went straight into design. For the rest, I wrote eight assumptions, each with what changes if it is wrong. A correction from the team changes one screen, not the whole flow.",
+    pt: "Alguns achados não podiam ser desenhados até o time decidir uma regra. Outros eram só interface. Misturar os dois travaria o desenho. 47 dos 162 achados não dependiam da decisão de ninguém, então foram direto para o desenho. Para o restante, escrevi oito suposições, cada uma com o que muda se ela estiver errada. Uma correção do time muda uma tela, e não o fluxo inteiro.",
   },
 
   // 6. UI Highlights
@@ -295,45 +308,53 @@ const copy = {
     en: "Medium-fidelity screens from the Figma file, built on the flow map.",
     pt: "Telas de média fidelidade do arquivo no Figma, feitas sobre o mapa do fluxo.",
   },
-  "highlights.contact-sheet.caption": {
-    en: "16 desktop frames, including loading, empty and error states.",
-    pt: "16 frames desktop, incluindo os estados de carregando, vazio e erro.",
-  },
   "highlights.list.caption": {
-    en: "The list opens on pending notes from any date.",
-    pt: "A lista abre nas notas pendentes de qualquer data.",
+    en: "The list opens on pending notes, with counters and filters above.",
+    pt: "A lista abre nas notas pendentes, com contadores e filtros acima.",
   },
-  "highlights.filters.caption": {
-    en: "Filters stay behind one button, so the list comes first.",
-    pt: "Os filtros ficam atrás de um botão, e a lista vem primeiro.",
-  },
-  "highlights.all-notes.caption": {
-    en: "Each note shows its state, and its button follows it.",
-    pt: "Cada nota mostra seu estado, e o botão acompanha.",
+  "highlights.list.alt": {
+    en: "Transcript list with status tabs (4 pending, 2 in progress, 7 completed, 13 total), search, and period, house, body and speaker filters. Each session card shows date, number of speeches and speakers, status, and the \"Original text\" and \"Mark passages\" buttons.",
+    pt: "Lista de notas taquigráficas com abas por estado (4 pendentes, 2 em andamento, 7 concluídas, 13 no total), busca e filtros de período, casa, órgão e orador. Cada cartão mostra data, número de discursos e oradores, estado e os botões “Texto original” e “Marcar trechos”.",
   },
   "highlights.open-note.caption": {
-    en: "An empty panel explains marking in three steps.",
-    pt: "O painel vazio explica a marcação em três passos.",
+    en: "The note opens with the speaker list beside the text.",
+    pt: "A nota abre com a lista de oradores ao lado do texto.",
+  },
+  "highlights.open-note.alt": {
+    en: "Close-up of an open session: on the left, a searchable list of speakers with the current one highlighted; on the right, the session details and the speech text, with a cited client underlined.",
+    pt: "Detalhe de uma sessão aberta: à esquerda, a lista de oradores com busca e o orador atual destacado; à direita, os dados da sessão e o texto do discurso, com um cliente citado sublinhado.",
   },
   "highlights.select.caption": {
-    en: "The mark button appears beside the selected text.",
-    pt: "O botão de marcar aparece ao lado do texto selecionado.",
+    en: "When text is selected, the mark button appears next to the passage.",
+    pt: "Ao selecionar o texto, o botão de marcar aparece junto ao trecho.",
+  },
+  "highlights.select.alt": {
+    en: "A sentence selected in blue inside a speech, with a floating \"Mark passage\" button just below the selection.",
+    pt: "Uma frase selecionada em azul dentro de um discurso, com o botão flutuante “Marcar trecho” logo abaixo da seleção.",
   },
   "highlights.mark.caption": {
-    en: "Marking asks for at least one team to receive it.",
-    pt: "A marcação exige ao menos uma equipe de destino.",
+    en: "Marking requires at least one team, and the last choice comes preselected.",
+    pt: "A marcação exige ao menos uma equipe, e a última escolha já vem selecionada.",
+  },
+  "highlights.mark.alt": {
+    en: "\"Mark passage\" window with the speaker, the selected passage with an option to adjust it, buttons to choose the receiving teams (Energy and Industry selected), an optional comment and the \"Cancel\" and \"Validate mark\" buttons.",
+    pt: "Janela “Marcar trecho” com o orador, o trecho selecionado com opção de ajuste, botões para escolher as equipes que recebem (Energia e Indústria marcadas), comentário opcional e os botões “Cancelar” e “Validar marcação”.",
   },
   "highlights.marked.caption": {
     en: "Each mark shows one state, its teams and one main action.",
     pt: "Cada marcação mostra um estado, suas equipes e uma ação principal.",
   },
+  "highlights.marked.alt": {
+    en: "Session screen in three columns: speakers, speeches with marked passages underlined, and a panel of marks with team and status filters. The open card shows status, passage, teams, author and the actions add team, edit, revoke and view trail.",
+    pt: "Tela da sessão em três colunas: oradores, discursos com os trechos marcados sublinhados e um painel de marcações com filtros por equipe e estado. O cartão aberto mostra estado, trecho, equipes, autoria e as ações de adicionar equipe, editar, revogar e ver a trilha.",
+  },
   "highlights.trail.caption": {
     en: "The trail shows where a passage is and who did what.",
     pt: "A trilha mostra onde o trecho está e quem fez o quê.",
   },
-  "highlights.error.caption": {
-    en: "A load error says nothing changed and gives a code.",
-    pt: "O erro de carregamento diz que nada mudou e traz um código.",
+  "highlights.trail.alt": {
+    en: "Mark trail panel open over the session: a notice that the passage is with Client Service, the steps from Content to Prysmo, and a dated history of who marked and edited it, with the teams before and after the change.",
+    pt: "Painel da trilha da marcação aberto sobre a sessão: um aviso de que o trecho está com o Atendimento, as etapas de Conteúdo a Prysmo e o histórico com data de quem marcou e editou, com as equipes antes e depois da mudança.",
   },
 
   // 7. Process
@@ -342,153 +363,141 @@ const copy = {
     pt: "Processo",
   },
   "process.lead1": {
-    en: "Clarity to decide the next step",
-    pt: "Clareza para decidir o próximo passo",
+    en: "Audit the whole flow first. Then separate what the team decides from what is only screen.",
+    pt: "Auditar o fluxo inteiro primeiro. Depois separar o que o time decide do que é só tela.",
   },
   // Rótulos das etapas, no mesmo formato do case Praieros
   "process.step1.label": {
-    en: "01 / Audit",
-    pt: "01 / Auditoria",
+    en: "01 / Care",
+    pt: "01 / Cuidado",
   },
   "process.step2.label": {
-    en: "02 / Mapping",
-    pt: "02 / Mapeamento",
+    en: "02 / Overview",
+    pt: "02 / Visão geral",
   },
   "process.step3.label": {
     en: "03 / Analysis",
     pt: "03 / Análise",
   },
   "process.step4.label": {
-    en: "04 / Synthesis",
-    pt: "04 / Síntese",
+    en: "04 / Patterns",
+    pt: "04 / Padrões",
   },
   "process.step5.label": {
     en: "05 / Triage",
     pt: "05 / Triagem",
   },
   "process.step6.label": {
-    en: "06 / Assumptions",
-    pt: "06 / Hipóteses",
+    en: "06 / Validation",
+    pt: "06 / Validação",
   },
   "process.step7.label": {
     en: "07 / Delivery",
     pt: "07 / Entrega",
   },
+  "process.step8.label": {
+    en: "08 / Scope",
+    pt: "08 / Escopo",
+  },
   "process.item1": {
-    en: "A system essential to the teams",
-    pt: "Um sistema essencial para as equipes",
+    en: "Auditing without disrupting the work",
+    pt: "Auditar sem interromper o trabalho",
   },
   "process.item2": {
-    en: "How I audited mattered as much as what I found. I worked in the environment where the system was developed, the same one the teams were using, taking care not to interfere with crucial actions. These points would be clarified through a survey sent to specialists, to understand expectations and the current situation. I read the system the way each role does, one after the other, before judging any single screen.",
-    pt: "A forma de auditar importava tanto quanto o que eu encontraria. Trabalhei no ambiente em que o sistema foi desenvolvido, o mesmo que as equipes estavam usando, com o cuidado de não interferir em ações cruciais. Esses pontos seriam esclarecidos por uma pesquisa enviada a especialistas, para entender as expectativas e o cenário atual. Percorri o sistema como cada papel o enxerga, um por vez, antes de julgar qualquer tela isolada.",
+    en: "Prysmo is a system the teams depend on every day. How I audited mattered as much as what I would find. I worked in the test environment and took care not to disrupt the teams' work or the analyses in progress. I went through the system the way each role sees it, one at a time, before judging any single screen.",
+    pt: "O Prysmo é um sistema de que as equipes dependem todos os dias. A forma de auditar importava tanto quanto o que eu encontraria. Trabalhei no ambiente de teste e tomei cuidado para não atrapalhar o trabalho das equipes nem as análises em andamento. Percorri o sistema como cada papel o enxerga, um por vez, antes de julgar qualquer tela isolada.",
   },
   "process.item3": {
-    en: "What each team hands to the next",
-    pt: "O que cada equipe entrega à próxima",
+    en: "What each team receives and passes on",
+    pt: "O que cada equipe recebe e entrega",
   },
   "process.item4": {
-    en: "I mapped inputs, actions, handoffs and notifications to reveal the dependencies between roles. That way, each change could account for what the next team needs to carry on the work.",
-    pt: "Mapeei entradas, ações, entregas e avisos para revelar as dependências entre os papéis. Assim, cada ajuste poderia considerar o que a equipe seguinte precisa para continuar o trabalho.",
+    en: "An overview of the three roles came before any deep dive. For each role, I recorded what it receives, what it does, what it passes on and who gets notified. Starting with the big picture avoids fixing one team without knowing what the next one expects to receive.",
+    pt: "Uma visão geral dos três papéis veio antes de qualquer mergulho. Para cada papel, registrei o que recebe, o que faz, o que passa adiante e quem é avisado. Começar pelo geral evita consertar uma equipe sem saber o que a próxima espera receber.",
   },
   "process.item5": {
-    en: "Three lenses, one scale",
-    pt: "Três lentes, uma escala",
+    en: "One role at a time",
+    pt: "Um papel por vez",
   },
   "process.item6": {
-    en: "I went deep one role at a time, through usability, interface and clarity of text. Each finding got a severity, an effort estimate and its evidence: seen on screen, said by the team, inferred, or a hypothesis.",
-    pt: "Aprofundei um papel por vez, pelas lentes de usabilidade, interface e clareza dos textos. Cada achado recebeu uma severidade, uma estimativa de esforço e a origem da evidência: visto na tela, dito pela equipe, inferência ou hipótese.",
+    en: "Three lenses, one scale. I went deep one role at a time, through the lenses of usability, interface and clarity of text. Each finding got a severity, an effort estimate and the source of its evidence: seen on screen, said by the team, inference or hypothesis.",
+    pt: "Três lentes, uma escala. Aprofundei um papel por vez, pelas lentes de usabilidade, interface e clareza dos textos. Cada achado recebeu uma severidade, uma estimativa de esforço e a origem da evidência: visto na tela, dito pela equipe, inferência ou hipótese.",
   },
   "process.image-slot1": {
     en: "Affinity map",
     pt: "Mapa de afinidade",
   },
   "process.caption1": {
-    en: "162 findings organized into 14 themes.",
-    pt: "162 achados organizados em 14 temas.",
+    en: "162 findings in 14 themes, color-coded by severity.",
+    pt: "162 achados em 14 temas, coloridos por severidade.",
+  },
+  "process.alt1": {
+    en: "Affinity map of the 162 design critique findings, with sticky notes grouped into themes, such as states with different names and signals, or filters and counters that don't say what there is to do. Note colors show severity: the legend counts 38 high, 90 medium and 34 low.",
+    pt: "Mapa de afinidade dos 162 achados do design critique, com notas adesivas agrupadas em temas, como estados com nomes e sinais diferentes ou filtros e contadores que não dizem o que há para fazer. A cor de cada nota indica a gravidade: a legenda conta 38 altos, 90 médios e 34 baixos.",
   },
   "process.item7": {
     en: "The patterns went beyond the screens",
     pt: "Os padrões iam além das telas",
   },
   "process.item8": {
-    en: "Severity varied across the findings:",
-    pt: "A severidade variava entre os achados:",
-  },
-  "process.item8.b1": {
-    en: "1 critical: risk of undoing other teams' work",
-    pt: "1 crítico: risco de desfazer o trabalho de outras equipes",
-  },
-  "process.item8.b2": {
-    en: "37 high: serious obstacles to completing tasks",
-    pt: "37 altos: obstáculos sérios para concluir as tarefas",
-  },
-  "process.item8.b3": {
-    en: "90 medium: friction that slows down the work",
-    pt: "90 médios: atritos que atrasavam o trabalho",
-  },
-  "process.item8.b4": {
-    en: "34 low: minor adjustments with limited impact",
-    pt: "34 baixos: ajustes pontuais, de pouco impacto",
-  },
-  "process.item8.after": {
-    en: "Ten themes appeared across all three teams, a sign that the problems lay in the product as a whole, not in a single screen.",
-    pt: "Dez temas apareciam nas três equipes, um sinal de que os problemas estavam no produto como um todo, e não em uma tela isolada.",
+    en: "162 findings became 14 themes. The findings were 1 critical, 37 high, 90 medium and 34 low. Ten themes appeared in all three teams, which showed they were problems of the product, not of a single screen.",
+    pt: "162 achados viraram 14 temas. Os achados foram 1 crítico, 37 altos, 90 médios e 34 baixos. Dez temas apareceram nas três equipes, o que mostrou que eram problemas do produto, e não de uma tela.",
   },
   "process.item9": {
-    en: "From diagnosis to action priorities",
-    pt: "Do diagnóstico às prioridades de ação",
+    en: "Each finding called for a response",
+    pt: "Cada achado pedia uma resposta",
   },
   "process.item10": {
-    en: "I sorted the findings by the kind of response each one needed. After splitting the 57 mixed ones, the 162 broke down like this:",
-    pt: "Separei os achados pelo tipo de resposta que pediam. Depois de dividir os 57 mistos, os 162 ficaram assim:",
-  },
-  "process.item10.b1": {
-    en: "85 interface: changes to the screens",
-    pt: "85 de interface: ajustes nas telas",
-  },
-  "process.item10.b2": {
-    en: "61 flow and rules: points tied to how the work runs",
-    pt: "61 de fluxo e regra: pontos ligados ao funcionamento do trabalho",
-  },
-  "process.item10.b3": {
-    en: "13 both: screen and rule had to be handled together",
-    pt: "13 dos dois tipos: tela e regra precisavam ser tratadas juntas",
-  },
-  "process.item10.b4": {
-    en: "3 defects: failures to report",
-    pt: "3 defeitos: falhas a reportar",
+    en: "Rules and screens were separated. 55 findings were about flow and rules, 47 were pure interface, 57 were mixed and 3 were defects to report. After splitting the mixed ones, 38 were interface, 13 both types and 6 rules.",
+    pt: "Regra e tela foram separadas. 55 achados eram de fluxo e regra, 47 eram de interface pura, 57 eram mistos e 3 eram defeitos a reportar. Depois de separar os mistos, 38 eram de interface, 13 dos dois tipos e 6 de regra.",
   },
   "process.image-slot2": {
     en: "Interface lens",
     pt: "Lente de interface",
   },
   "process.caption2": {
-    en: "Each theme is flow, interface, both, or a defect.",
-    pt: "Cada tema é de fluxo, de interface, dos dois ou um defeito.",
+    en: "Themes sorted into flow and rule, interface, both, or defect.",
+    pt: "Temas separados em fluxo e regra, interface, os dois ou defeito.",
+  },
+  "process.alt2": {
+    en: "The 14 themes in four groups: five on flow and rule, to decide with the team before wireframes; three on interface and polish, with no rule change; five on both; and one defect to report to developers, the system help that does not open.",
+    pt: "Os 14 temas em quatro grupos: cinco de fluxo e regra, para decidir com o time antes do wireframe; três de interface e acabamento, sem mudar regra; cinco dos dois; e um defeito para reportar ao desenvolvimento, a ajuda do sistema que não abre.",
   },
   "process.item11": {
-    en: "Assumptions made visible for validation",
-    pt: "Hipóteses visíveis para validação",
+    en: "Assumptions in plain view",
+    pt: "Suposições à vista do time",
   },
   "process.item12": {
-    en: "Based on the findings, I formulated eight assumptions. In the flow map, I highlighted each one in yellow to show the team where the analysis ended and which points still needed confirmation.",
-    pt: "A partir dos achados, formulei oito hipóteses. No mapa do fluxo, destaquei cada uma em amarelo para mostrar ao time onde terminava a análise e quais pontos ainda dependiam de confirmação.",
+    en: "The assumptions came with what changes if they are wrong. I wrote eight assumptions based on the findings. In the flow map, each assumption appears in yellow, so the team can see where my logic ends and their confirmation begins.",
+    pt: "As suposições vieram com o que muda se estiverem erradas. Escrevi oito suposições a partir dos achados. No mapa do fluxo, cada suposição aparece em amarelo, para o time ver onde termina a minha lógica e onde começa a confirmação deles.",
   },
   "process.image-slot3": {
     en: "Impact and effort",
     pt: "Impacto e esforço",
   },
   "process.caption3": {
-    en: "Themes ranked by impact and effort.",
-    pt: "Temas ordenados por impacto e esforço.",
+    en: "The 14 themes placed by impact and effort.",
+    pt: "Os 14 temas posicionados por impacto e esforço.",
+  },
+  "process.alt3": {
+    en: "Impact and effort matrix with the 14 themes. High impact and low effort: themes 3, 4, 6, 9 and 14, the last one a defect to report. High impact and high effort: themes 1, 2, 7, 8, 10 and 11. Low impact and low effort: themes 5 and 12. Low impact and high effort: theme 13.",
+    pt: "Matriz de impacto e esforço com os 14 temas. Alto impacto e baixo esforço: temas 3, 4, 6, 9 e 14, este último um defeito a reportar. Alto impacto e alto esforço: temas 1, 2, 7, 8, 10 e 11. Baixo impacto e baixo esforço: temas 5 e 12. Baixo impacto e alto esforço: tema 13.",
   },
   "process.item13": {
     en: "Fidelity matched to the moment",
     pt: "Fidelidade na medida do momento",
   },
   "process.item14": {
-    en: "I proposed a sequence of audit, synthesis, specification and wireframes, moving forward one team at a time. With the steps approved, we defined a medium-fidelity delivery. The priority was enough detail to settle structure, states and wording, while staying agile for adjustments as the rules were confirmed. With a short deadline, we avoided investing in details that could still change.",
-    pt: "Propus uma sequência com auditoria, síntese, especificação e wireframes, avançando por uma equipe de cada vez. Com as etapas aprovadas, definimos uma entrega de média fidelidade. A prioridade era detalhar o suficiente para fechar estrutura, estados e textos, mantendo agilidade para ajustes enquanto as regras eram confirmadas. Com o prazo curto, evitamos investir em detalhes que ainda poderiam mudar.",
+    en: "The delivery was sized to the team's moment. I proposed the sequence: audit, synthesis, specification and wireframes, one team at a time, starting with Content. The team approved the idea and the steps. I chose a medium-fidelity delivery: enough detail to settle structure, states and wording, and light enough to change quickly while the rules were still being confirmed. The deadline was short, and this kept me from spending it on details that could still change. A higher-fidelity prototype comes later.",
+    pt: "A entrega foi dimensionada ao momento da equipe. Propus a sequência: auditoria, síntese, especificação e wireframes, uma equipe por vez, começando pelo Conteúdo. O time aprovou a ideia e as etapas. Escolhi uma entrega de média fidelidade: detalhe suficiente para fechar estrutura, estados e textos, e leve o bastante para mudar rápido enquanto as regras ainda eram confirmadas. O prazo era curto, e isso evitou gastá-lo em detalhes que ainda podiam mudar. Um protótipo de maior fidelidade vem depois.",
+  },
+  "process.item15": {
+    en: "The main path first",
+    pt: "O caminho principal primeiro",
+  },
+  "process.item16": {
+    en: "A request from the team shaped the scope. There was no need to draw every branch of every screen. I drew the main path and the states that matter, and described the branches in the specification. Issues Review is left for the next sprint and appears on the map only as \"in review\".",
+    pt: "Um pedido do time moldou o escopo. Não era preciso desenhar cada ramificação de cada tela. Desenhei o caminho principal e os estados que importam, e descrevi as ramificações na especificação. A Revisão de Issues fica para a próxima sprint e aparece no mapa só como “em revisão”.",
   },
 
   // 8. Outcome
@@ -497,12 +506,12 @@ const copy = {
     pt: "Resultado",
   },
   "outcome.lead1": {
-    en: "The first delivery on a new foundation",
-    pt: "A primeira entrega de uma nova base",
+    en: "Content's curation flow, designed on top of the map of the whole flow.",
+    pt: "O fluxo de curadoria do Conteúdo, desenhado sobre o mapa do fluxo inteiro.",
   },
   "outcome.text1": {
-    en: "The first team's delivery brings together 16 screens and an annotated specification for each one, linking every requirement to the finding behind it. Since the system is used primarily in computer browsers, we designed the screens for desktop, the main work context. With the project in progress, this is the first result of work that will continue with the next teams.",
-    pt: "A entrega da primeira equipe reúne 16 telas e uma especificação anotada para cada uma, ligando cada requisito ao achado que o originou. Como o sistema é usado prioritariamente em navegadores de computador, desenhamos as telas para desktop, o principal contexto de trabalho. Com o projeto em andamento, este é o primeiro resultado de uma construção que segue para as próximas equipes.",
+    en: "The Content team's flow is delivered: 16 desktop frames and an annotated specification for each screen, where every requirement points to the finding it came from. The project is in progress, so this is a first result, not the final one.",
+    pt: "O fluxo da equipe de Conteúdo está entregue: 16 frames desktop e uma especificação anotada para cada tela, em que cada exigência aponta para o achado de onde veio. O projeto está em andamento, então este é um primeiro resultado, e não o final.",
   },
   "outcome.text2": {
     en: "The problem",
@@ -513,52 +522,52 @@ const copy = {
     pt: "O que construí",
   },
   "outcome.item1": {
-    en: "Each team worked well alone, and the work got lost between teams.",
-    pt: "Cada equipe funcionava sozinha, e o trabalho se perdia entre elas.",
+    en: "Content's work was clear on screen and confusing once it left it.",
+    pt: "O trabalho do Conteúdo era claro na tela e confuso depois que saía dela.",
   },
   "outcome.item2": {
     en: "A map of the whole flow, with every return path named.",
     pt: "Um mapa do fluxo inteiro, com cada caminho de volta nomeado.",
   },
   "outcome.item3": {
-    en: "One click in the Content team's environment could undo other teams' work.",
-    pt: "Um clique no ambiente da equipe de Conteúdo podia desfazer o trabalho de outras equipes.",
+    en: "One click in Content could undo other teams' work.",
+    pt: "Um clique no Conteúdo podia desfazer o trabalho de outras equipes.",
   },
   "outcome.item4": {
-    en: "Rules for edit and revoke, written so we could build a flow confirmed by the team.",
-    pt: "Regras para editar e revogar, escritas para criarmos um fluxo com a confirmação do time.",
+    en: "Rules for editing and revoking, written for the team to confirm.",
+    pt: "Regras para editar e revogar, escritas para o time confirmar.",
   },
   "outcome.item5": {
-    en: "Some findings waited for decisions, and others did not.",
+    en: "Some findings were waiting on decisions, and others were not.",
     pt: "Alguns achados esperavam decisões, e outros não.",
   },
   "outcome.item6": {
-    en: "Findings sorted into rules, interface and defects, so design could proceed on what needed no decision.",
-    pt: "Achados separados em regra, interface e defeitos, para o desenho prosseguir no que não precisava de decisão.",
+    en: "Findings sorted into rules, interface and defects, so design could move ahead on what needed no decision.",
+    pt: "Achados separados em regra, interface e defeitos, para o desenho andar no que não precisava de decisão.",
   },
   "outcome.text4": {
     en: "What comes next",
     pt: "O que vem a seguir",
   },
   "outcome.item7": {
-    en: "The screens for the Issues Analyst and Client Service teams are already in development, following the same map.",
-    pt: "As telas das equipes de Analista de Issues e de Atendimento já estão em desenvolvimento, seguindo o mesmo mapa.",
+    en: "The Issues Analyst flow comes next, then Client Service, both designed on the same map.",
+    pt: "O fluxo do Analista de Issues vem a seguir, depois o do Atendimento, ambos desenhados sobre o mesmo mapa.",
   },
   "outcome.item8": {
-    en: "The survey follow-up is active to identify answers that can guide scalable adjustments to the feature.",
-    pt: "O acompanhamento da pesquisa está ativo para identificar respostas que orientem ajustes escaláveis no recurso.",
+    en: "The team's answers to the open questions in the flow, such as where a returned passage goes back to and who owns the client registry. The specification already says what each answer would change.",
+    pt: "As respostas do time às perguntas abertas do fluxo, como para onde volta um trecho devolvido e quem é dono do cadastro de clientes. A especificação já diz o que cada resposta mudaria.",
   },
   "outcome.item9": {
-    en: "Usability testing will continue as the sprint wraps up, with the team brought in based on the input made available.",
-    pt: "O teste de usabilidade seguirá no fechamento da sprint, com o acionamento da equipe a partir dos insumos disponibilizados.",
+    en: "Usability testing of the design. There are no outcome metrics yet, and these are design deliverables, not usage results.",
+    pt: "Testes de usabilidade do desenho. Ainda não há métricas de resultado, e estas são entregas de design, não resultados de uso.",
   },
   "outcome.text5": {
     en: "What I take from this",
     pt: "O que levo disso",
   },
   "outcome.text6": {
-    en: "When many people share the same flow, you need to find the invisible thread connecting them before proposing the first pixel",
-    pt: "Quando muitas pessoas dividem o mesmo fluxo, é preciso encontrar o fio invisível que as conecta antes de propor o primeiro pixel",
+    en: "In a flow shared by several teams, the hard part is not the screen. It is the moment one team hands the work to the next.",
+    pt: "Em um fluxo compartilhado por várias equipes, a parte difícil não é a tela. É o momento em que uma equipe passa o trabalho para a próxima.",
   },
 
   // 9. Menu lateral do case e rodapé
